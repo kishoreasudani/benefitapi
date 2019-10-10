@@ -1,0 +1,43 @@
+// Morris.Bar({
+        //         element: 'bar_charts',
+        //         data: [{
+        //             x: "Today's",
+        //             y: "<?php echo $users['today_users'];?>",
+        //             z: "<?php echo $vouchers['today_users'];?>",
+        //             a: "<?php echo $steps['today_users'];?>",
+        //             b: "<?php echo $coins['today_users'];?>",
+        //             c: "<?php echo $active_users['today_users'];?>"
+        //         }, {
+        //                 x: "This WEEK's",
+        //                 y: "<?php echo $users['this_week_users'];?>",
+        //                 z: "<?php echo $vouchers['this_week_users'];?>",
+        //                 a: "<?php echo $steps['this_week_users'];?>",
+        //                 b: "<?php echo $coins['this_week_users'];?>",
+        //                 c: "<?php echo $active_users['this_week_users'];?>"
+        //             }, {
+        //                 x: "This Month's",
+        //                 y: "<?php echo $users['this_month_users'];?>",
+        //                 z: "<?php echo $vouchers['this_month_users'];?>",
+        //                 a: "<?php echo $steps['this_month_users'];?>",
+        //                 b: "<?php echo $coins['this_month_users'];?>",
+        //                 c: "<?php echo $active_users['this_month_users'];?>"
+        //             }, {
+        //                 x: "Last six month's",
+        //                 y: "<?php echo $users['6_month_users'];?>",
+        //                 z: "<?php echo $vouchers['6_month_users'];?>",
+        //                 a: "<?php echo $steps['6_month_users'];?>",
+        //                 b: "<?php echo $coins['6_month_users'];?>",
+        //                 c: "<?php echo $active_users['6_month_users'];?>"
+        //             }, {
+        //                 x: "This Year's",
+        //                 y: "<?php echo $users['this_year_users'];?>",
+        //                 z: "<?php echo $vouchers['this_year_users'];?>",
+        //                 a: "<?php echo $steps['this_year_users'];?>",
+        //                 b: "<?php echo $coins['this_year_users'];?>",
+        //                 c: "<?php echo $active_users['this_year_users'];?>"
+        //             }],
+        //         xkey: 'x',
+        //         ykeys: ['y', 'z', 'a', 'b', 'c'],
+        //         labels: ['Registered Users', 'Redeemed Vouchers', 'Average Steps', 'Redeemed Points', 'Active Users'],
+        //         barColors: ['rgb(233, 30, 99)', 'rgb(0, 188, 212)', 'rgb(0, 150, 136)', 'rgb(435, 45, 245)', 'rgb(34,234,23)'],
+        // });

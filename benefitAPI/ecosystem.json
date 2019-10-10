@@ -1,0 +1,11 @@
+{
+    "apps": [{
+        "name": "benefitAPI",
+        "script": "app.js",
+        "error_file": "./err.log",
+        "out_file": "./out.log",
+        "watch": "../",
+        "watch_delay": 1000,
+        "log_date_format": "YYYY-MM-DD HH:mm Z"
+    }]
+}

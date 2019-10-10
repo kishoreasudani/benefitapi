@@ -1,0 +1,30 @@
+{
+	"jwt": {
+		"publicKey": "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDRry8T/ef/FM51TBe0/Qs16pPAKlA6oncQRZbIdzmGOxH0H7PwDDOEe90k2JLkiO0CifofkV08m4nZ6EIH6slwdRtZKkRP6FfnRZcirtPpAWcpGDuKrKS5XGxIsrzD6vlnm6D2rvxrcnCDt6e8TSx5vFkbG9Emb6DmoFqcn+2MSQIDAQAB",
+		"issuer": "Pedometer",
+		"subject": "Pedometer Api",
+		"audience": "Pedometer",
+		"expiresIn": "30d"
+	},
+	"mysql": {
+		"database": "benefit",
+		"username": "root",
+		"password": "benefit2019",
+		"host": "benefit.covz9lpmpch7.ap-south-1.rds.amazonaws.com",
+		"dialect": "mysql"
+	},
+	"encrypt": {
+		"salt": "DYhG93b0qyJfIxfs2guVoUubWwvniR2G0Fgamuni",
+		"algorithm": "sha1",
+		"digest": "hex",
+		"publicKey": "",
+		"privateKey": ""
+	},
+	"fcm": {
+		"serverKey": "AAAAdOJ5aUc:APA91bGcte516BmQ9uhEf4BvMnjZBm4g-4zKHiWx_Mzatf2b8wnr0Pj5-X4QcZvu6GhJ5AgGNCxN1g3L_yWcJGgg2PKt2gprCvC4Cs9o89QsEPnS_a2pS8zsUP2kOS52p_PSAe8S2Kd8"
+	},
+	"admin_portal": {
+		"baseURL": "http://192.168.1.3/pedometer/",
+		"attachmentFolder": "data/attachment/"
+	}
+}

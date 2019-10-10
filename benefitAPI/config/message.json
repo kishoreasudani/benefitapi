@@ -1,0 +1,59 @@
+{
+    "success": {
+        "message": "success",
+        "statusCode": 200
+    },
+    "unAuthorize": {
+        "message": "Invalid authorization token",
+        "statusCode": "403"
+    },
+    "login_error": {
+        "message": "Invalid email or password",
+        "inactive_message": "Your account has been deactivated. Please contact to administrator and try again.",
+        "deleted_message": "Your account has been deleted. Please contact to administrator and try again.",
+        "blocked_message": "Your account has been blocked. Please contact to administrator and try again.",
+        "facebook_account": "Your have register with Facebook. Please login using Facebook account.",
+        "google_account": "Your have register with Google. Please login using Google account.",
+        "not_found": "You have not register with us.",
+        "statusCode": "401"
+    },
+    "user_validation": {
+        "statusCode": "400",
+        "not_found": "User does not exists",
+        "email": "Email cannot be empty",
+        "password": "Password cannot be empty",
+        "mobile": "Mobile number cannot be empty",
+        "user_id": "user id cannot be empty",
+        "new_password": "New Password cannot be empty",
+        "old_password": "Old Password cannot be empty",
+        "new_old_password": "New password and old password cannot be same.",
+        "invalid_old_password": "Invalid old password. Please enter correct password and try again.",
+        "otp": "OTP cannot be empty",
+        "otp_verify": "Invalid OTP. Please enter correct OTP and try again.",
+        "first_name": "First name cannot be empty",
+        "current_status": "Current status cannot be empty",
+        "email_already_exists": "Email already register with us.",
+        "mobile_already_exists": "Mobile no already register with us.",
+        "mobile_email_already_exists": "Mobile no or email already register with us."
+    },
+    "voucher_validation": {
+        "statusCode": "400",
+        "voucher_id": "Voucher id cannot be blank",
+        "not_found": "Data does not exist"
+    },
+    "coin_validation": {
+        "statusCode": "400",
+        "not_enough_coin": "You does not have require coins. Please try again or earn more coins.",
+        "not_found": "Data does not exist",
+        "reference_id": "Reference id cannot be blank",
+        "user_id": "User id cannot be blank"
+    },
+    "faq_validation": {
+        "statusCode": "400",
+        "voucher_id": "Faq id cannot be blank",
+        "not_found": "Data does not exist"
+    },
+    "notification_massage": {
+        "re_audit": "<cinema_name> send for re-audit by reviewer"
+    }
+}
