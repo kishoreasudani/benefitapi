@@ -154,8 +154,6 @@ getUserProfile = async (req, reply) => {
 
 
 
-
-
 // get setting table data
 getSetting = async (req, reply) => {
         userService.getSetting(req.body).then(response => {
@@ -163,6 +161,15 @@ getSetting = async (req, reply) => {
         }).catch(err => {
             utils.sendAndWriteErrorResponse(err, reply);
         })    
+}
+
+
+updateNotificationStatus = async (req, reply) => {
+    userService.updateNotificationStatus(req.body).then(response => {
+        utils.sendSuccessResponse(response[0], response[0], reply);
+    }).catch(err => {
+        utils.sendAndWriteErrorResponse(err, reply);
+    })
 }
 
 
@@ -178,5 +185,6 @@ module.exports = {
     updateProfile,
     updateImage,
     getSetting,
-    getUserProfile
+    getUserProfile,
+    updateNotificationStatus
 }

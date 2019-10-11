@@ -285,6 +285,25 @@ getSetting = (user) => {
 }
 
 
+updateNotificationStatus = (params) => {
+    return new Promise(function (resolve, reject) {
+        let user_id = params.id;
+        let status = params.notificationStatus;
+        // mySQl query
+       var sqlQuery = "Update users SET modified=UTC_TIMESTAMP(), push_notifications='" +status
+            + "', modified_by='" + user_id + "' WHERE id='" + user_id + "'";
+    
+        connections.ExecuteUpdateQuery(sqlQuery)
+            .then(data => {
+                resolve(data);
+            }).catch(err => {
+                reject(err);
+            });
+    })
+}
+
+
+
 
 
 //export functions
@@ -303,5 +322,6 @@ module.exports = {
     createUser,
     getSetting,
     getByEmailorPassword,
-    getUserProfile
+    getUserProfile,
+    updateNotificationStatus
 }

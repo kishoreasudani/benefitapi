@@ -61,6 +61,13 @@ const routes = [
         url: basePath + 'user/getUserProfile',
         handler: userController.getUserProfile
     },
+
+     {
+        method: 'POST',
+        url: basePath + 'user/updateNotificationStatus',
+        handler: userController.updateNotificationStatus
+    },
+
  
    
     // notifications
