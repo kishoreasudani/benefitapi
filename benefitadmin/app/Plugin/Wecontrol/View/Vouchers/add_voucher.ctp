@@ -12,7 +12,7 @@
           ['FontSize','TextColor','BGColor'],
           ['Cut', 'Copy', 'PasteText','Bold', 'Italic', 'Underline','Subscript','Superscript','Maximize'],
           ['NumberedList', 'BulletedList','JustifyLeft','JustifyRight','JustifyCenter','JustifyBlock'],
-          ['MediaEmbed'],
+          ['MediaEmbed'],['Link']
           
           
         ],
@@ -81,7 +81,7 @@
                 <div class="body">
                     <?php echo $this->Form->create('Voucher',array('url' => 'javascript:void(0)' , 'novalidate' => true,'id' => 'VoucherAddForm', 'enctype' => "multipart/form-data")) ;?>                        
                     <div class="row">
-                        <div class="col-md-6">
+                        <div class="col-md-4">
                             <label for="email_address">Name<span class="red_star">*</span></label>
                             <div class="form-group">
                                 <div class="form-line">
@@ -89,7 +89,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-md-6">
+                        <div class="col-md-4">
                             <label for="email_address">Code<span class="red_star">*</span></label>
                             <div class="form-group">
                                 <div class="form-line">
@@ -97,6 +97,17 @@
                                 </div>
                             </div>
                         </div>
+
+                         <div class="col-md-4">
+                            <label for="email_address">Vendor<span class="red_star">*</span></label>
+                            <div class="form-group">
+                                <div class="form-line">
+                                   <?php       
+                                      echo $this->Form->input('Voucher.vendor_id', array('type'=>'select','empty'=> 'Select Vendor', 'options'=>$vendorsList,'class'=>'form-control','label'=>false)); ?>
+                                </div>
+                            </div>
+                        </div> 
+
                     </div>
                     
                     <div class="row">
@@ -150,7 +161,7 @@
                             <label for="email_address">Description</label>
                             <div class="form-group">
                                 <div class="form-line">
-                                    <?php echo $this->Form->textarea('Voucher.descriptions',array('placeholder' => 'Enter Content','class' => 'form-control desp','rows'=>5)); ?>
+                                    <?php echo $this->Form->textarea('Voucher.descriptions',array('placeholder' => 'Enter Content','class' => 'form-control','rows'=>5)); ?>
                                 </div>
                             </div>
                         </div>

@@ -303,9 +303,6 @@ updateNotificationStatus = (params) => {
 }
 
 
-
-
-
 //export functions
 module.exports = {
     getById,

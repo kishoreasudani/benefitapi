@@ -2,7 +2,7 @@
     <div class="container-fluid">
         <div class="block-header relative">
             <h2 class="text-uppercase">
-				Vouchers
+				Vouchers <?php echo $vendor_id; ?>
             </h2> 
 			<?php   
 			echo $this->Html->link('Add Voucher',array('controller'=>'vouchers','action'=>'add_voucher'),array('class' => 'btn bg-orange waves-effect pull-right btn-right-position','escape'=>false)) ; 
@@ -29,6 +29,7 @@
                                         </div>
                                     </div>
                                 </div>
+
                                 <div class="col-sm-2">
                                     <div class="form-group no-margin-b	">
                                         <div class="form-line">                                        
@@ -36,7 +37,19 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-sm-3 m-t-10">
+
+
+                                 <div class="col-sm-2">
+                                    <div class="form-group no-margin-b	">
+                                        <div class="form-line">  
+
+                                        	<?php echo $this->Form->select('Search.vendor',$vendorsList,array('empty'=>'Select Vendor',  'class'=>'form-control SearchValVendor','value'=>$vendor_id));  ?>                                           
+                                        </div>
+                                     </div>
+                                  </div>
+
+
+                                <div class="col-sm-2 m-t-10">
                                     <button type="button" class="btn bg-green waves-effect" id="search_button">Search</button>
                                     <button type="button" class="btn btn-primary waves-effect reset_data">Reset</button>                                    
                                 </div>
@@ -73,7 +86,7 @@
 <script> 
 $(document).ready(function(){
 
-	var url = adminUrl+'vouchers/vouchers_data';
+	var url = adminUrl+'vouchers/vouchers_data/'+'<?php echo $vendor_id; ?>';
 	loadPiece(url,'#empdata');	
 
     $("#search_button").click(function() {

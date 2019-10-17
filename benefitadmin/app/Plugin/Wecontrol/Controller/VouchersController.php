@@ -1,23 +1,144 @@
 <?php
 class VouchersController extends WecontrolAppController {
 	public $name = 'Vouchers';
-	public $uses = array('Wecontrol.Voucher', 'Wecontrol.UserOrder');
+	public $uses = array('Wecontrol.Voucher', 'Wecontrol.UserOrder','Vendor');
 	var $components	=	array('Session', 'Email', 'SendEmail', 'RequestHandler', 'Paginator', 'General','PImage');
 	var $helpers 	= 	array('Html', 'Form', 'Session', 'General');
 
 	function beforeFilter(){
 		parent::beforeFilter();
-		$this->Auth->allow('index', 'vouchers_data', 'add_voucher', 'edit_voucher', 'view_voucher', 'delete_voucher');			
+		$this->Auth->allow('index', 'vouchers_data', 'add_voucher', 'edit_voucher', 'view_voucher', 'delete_voucher','vendors','vendors_data','delete_vendors','add_vendor','edit_vendor');			
 	}
 
-	public function index() {	
+
+
+	public function vendors() {	
 		# Check login status...
  		$this->_is_user_login ();
 	}
 
-	public function vouchers_data($reset = null) {
+	public function vendors_data($reset = null) {
 		$this->layout = false;
 		$conditions = array();
+		if(!empty($this->params->query['data']['Search'])){
+			if(!empty($this->params->query['data']['Search']['name'])){
+				$conditions[] = array(
+					'OR' => array(
+						'Vendor.name LIKE'=>"%".$this->params->query['data']['Search']['name']."%",	 
+					)
+				);
+			}
+			
+		   if(!empty($this->params->query['data']['Search']['status'])){
+				$conditions[] = array(
+					'AND' => array(
+						'Vendor.status'=>	$this->params->query['data']['Search']['status'],
+					)
+				);
+			}
+		}else{
+			$conditions = "";
+		}	
+		$this->Paginator->settings = array('order' => 'Vendor.name asc','limit' => Configure::read('AdminListingLimit'));
+		$listingData = $this->paginate('Vendor',$conditions);
+		$userVoucherList = array();
+		$userVoucherList = $listingData;
+		foreach($listingData as $key => $value){
+			$userVoucherList[$key]['Vendor']['count'] = $this->Voucher->find('count', array('conditions' => array('vendor_id' => $value['Vendor']['id'])));
+		}
+        $this->set('listingData',$userVoucherList);		
+
+	}
+
+
+	public function add_vendor( ) {
+		$this->_is_user_login (); 
+		$message = "";	
+		if(!empty($this->data)) {
+			$this->Vendor->set($this->request->data);
+			$this->Vendor->setValidation('add');
+			if($this->Vendor->validates())  {
+				$this->request->data['Vendor']['status'] = 'active';
+                $this->Vendor->create();
+	            if($this->Vendor->save($this->request->data,false)) {
+	            	$success = true;
+					$message = "The Vendor has been saved.";
+					//$this->Session->setFlash('The Vendor has been saved.', 'default', null, 'success');
+	            } else {
+					$success = false;
+					$message = "Vendor could not be saved. Please, try again.";	
+				}
+			} else {
+				if(!empty($this->Vendor->validationErrors)) {
+					$success =	false;
+					foreach($this->Vendor->validationErrors as $error_key=>$error_value) {
+
+						$error_key = str_replace('_', ' ', $error_key);
+						$error_key = ucwords($error_key);
+						$error_key = str_replace(' ', '', $error_key);
+						$message['Vendor'.$error_key]	=	$error_value;
+					}
+				}
+	         }	
+			echo json_encode(array('success'=>$success, 'message'=>$message));
+			die;
+		}	
+    }
+
+
+    public function edit_vendor($id=null) {
+    	$this->set('vendorid',$id);
+        $id = base64_decode($id);
+		$this->_is_user_login (); 
+		$message = "";	
+		if(!empty($this->data)) {
+			$this->Vendor->set($this->request->data);
+            $this->request->data['Vendor']['id'] = $id;
+
+			$this->Vendor->setValidation('edit');
+			if($this->Vendor->validates())  {
+	            if($this->Vendor->save($this->request->data,false)) {
+	            	$success = true;
+					$message = "The Vendor has been updated.";
+					//$this->Session->setFlash('The Vendor has been saved.', 'default', null, 'success');
+	            } else {
+					$success = false;
+					$message = "Vendor could not be saved. Please, try again.";	
+				}
+			} else {
+				if(!empty($this->Vendor->validationErrors)) {
+					$success =	false;
+					foreach($this->Vendor->validationErrors as $error_key=>$error_value) {
+
+						$error_key = str_replace('_', ' ', $error_key);
+						$error_key = ucwords($error_key);
+						$error_key = str_replace(' ', '', $error_key);
+						$message['Vendor'.$error_key]	=	$error_value;
+					}
+				}
+	         }	
+			echo json_encode(array('success'=>$success, 'message'=>$message));
+			die;
+		}else{
+			$this->data = $this->Vendor->findById($id);
+		}	
+    }
+
+
+	public function index($vendor_id=null) {	
+		# Check login status...
+ 		$this->_is_user_login ();
+ 		$this->set('vendor_id',base64_decode($vendor_id));
+
+ 		$vendorsList =  $this->Vendor->find('list',array('fields'=>array('Vendor.id','Vendor.name'),'order'=>array('Vendor.name'=>'ASC')));
+		$this->set('vendorsList',$vendorsList);
+	}
+
+
+	public function vouchers_data($checkVendor = null) {
+		$this->layout = false;
+		$conditions = array();
+
 		if(!empty($this->params->query['data']['Search'])){
 			if(!empty($this->params->query['data']['Search']['name'])){
 				$conditions[] = array(
@@ -33,6 +154,7 @@ class VouchersController extends WecontrolAppController {
 					)
 				);
 			}
+
 		   if(!empty($this->params->query['data']['Search']['status'])){
 				$conditions[] = array(
 					'AND' => array(
@@ -40,10 +162,31 @@ class VouchersController extends WecontrolAppController {
 					)
 				);
 			}
+
+		   $checkVendor = $this->params->query['data']['Search']['vendor'];
+		   if(!empty($checkVendor) && $checkVendor>0){
+				$conditions[] = array(
+					'AND' => array(
+						'Voucher.vendor_id'=>$checkVendor,
+					)
+				);
+			}
+
+
+
+
 		}else{
-			$conditions = "";
+
+			if(!empty($checkVendor) && $checkVendor>0){
+				$conditions[] = array(
+					'AND' => array(
+						'Voucher.vendor_id'=>$checkVendor,
+					)
+				);
+			}
+			
 		}	
-		$this->Paginator->settings = array('order' => 'Voucher.created asc','limit' => Configure::read('AdminListingLimit'));
+		$this->Paginator->settings = array('order' => 'Voucher.id DESC','limit' => Configure::read('AdminListingLimit'));
 		$listingData = $this->paginate('Voucher',$conditions);
 		$userVoucherList = array();
 		$userVoucherList = $listingData;
@@ -80,6 +223,27 @@ class VouchersController extends WecontrolAppController {
 			$this->redirect('/');
 		}
     }
+
+
+    public function delete_vendors($id = null){
+		$this->layout = false;
+		if($this->request->is('ajax')) {		
+				$response = array();
+				if(!empty($id)) {
+					$this->Vendor->deleteAll(array('Vendor.id' => $id), false);
+					$response = array('success' => true,'msg' => 'Vendor has been deleted successfully.');
+				} else {
+					$response = array('success' => false,'msg' => 'Oops error please try again.');
+				}
+			echo json_encode($response);
+            die;
+		} else {
+			$this->redirect('/');
+		}
+    }
+
+
+
     
     public function add_voucher( ) {
 		$this->_is_user_login (); 
@@ -88,6 +252,8 @@ class VouchersController extends WecontrolAppController {
 			$this->Voucher->set($this->request->data);
 			$this->Voucher->setValidation('add');
 			if($this->Voucher->validates())  {
+
+
 				$this->request->data['Voucher']['status'] = 'active';
 				$this->request->data['Voucher']['created_by'] = $this->Session->read('Auth.Admin.id');
                 $this->request->data['Voucher']['start_date'] = date('Y-m-d H:i',strtotime($this->request->data['Voucher']['start_date']));
@@ -164,9 +330,17 @@ class VouchersController extends WecontrolAppController {
 					}
 				}
 	         }	
+
+
+
+
 			echo json_encode(array('success'=>$success, 'message'=>$message));
 			die;
 		}	
+
+		$vendorsList =  $this->Vendor->find('list',array('fields'=>array('Vendor.id','Vendor.name'),'order'=>array('Vendor.name'=>'ASC')));
+		$this->set('vendorsList',$vendorsList);
+
     }
     
     public function edit_voucher($id = null ) {
@@ -259,5 +433,8 @@ class VouchersController extends WecontrolAppController {
 			$this->request->data['Voucher']['start_date'] = date('Y-m-d H:i:s',strtotime($this->request->data['Voucher']['start_date']));
 			$this->request->data['Voucher']['end_date'] = date('Y-m-d H:i:s',strtotime($this->request->data['Voucher']['end_date']));
 		}
+
+	   $vendorsList =  $this->Vendor->find('list',array('fields'=>array('Vendor.id','Vendor.name'),'order'=>array('Vendor.name'=>'ASC')));
+		$this->set('vendorsList',$vendorsList);
 	}
 }

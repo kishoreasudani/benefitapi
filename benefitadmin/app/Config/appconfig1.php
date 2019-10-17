@@ -110,7 +110,7 @@ define( 'LOGIN_SUCCESS', 'Logged in successfully. Awesome!!!');
 define( 'LOGOUT_SUCCESS', 'Logged out successfully. Welcome!!!');
 define( 'LOGIN_ERROR', 'Email and Password mismatch, Please try again');
 
-Configure::write('GetImage', '/mindstock/');
+Configure::write('GetImage', '/pedomoeter/');
 Configure::write('GetImagesUrl', 'http://'.$_SERVER['HTTP_HOST'].Configure::read('GetImage'));
  
 
@@ -123,11 +123,11 @@ Configure::write('SiteSettings.Absolute.StaticPagesImage',Configure::read('SiteS
 Configure::write('SiteSettings.Relative.excel',$_SERVER['DOCUMENT_ROOT'].Configure::read('SiteSettings.applicationFolder').'data/excelFiles/'); 
 
 Configure::write('SiteSettings.Relative.VoucherImage',$_SERVER['DOCUMENT_ROOT'].Configure::read('SiteSettings.applicationFolder').'data/vouchers/');
-Configure::write('SiteSettings.Absolute.VoucherImage',Configure::read('SiteSettings.actionUrl').'/data/vouchers/');
+Configure::write('SiteSettings.Absolute.VoucherImage',Configure::read('SiteSettings.actionUrl').'data/vouchers');
 
 Configure::write('SiteSettings.Relative.UserImage',$_SERVER['DOCUMENT_ROOT'].Configure::read('SiteSettings.applicationFolder').'data/user/');
 Configure::write('SiteSettings.Absolute.UserImage',Configure::read('SiteSettings.actionUrl').'/data/user/');
-Configure::write('PUSH_API_KEY', 'AAAASFrQQrw:APA91bGE5PPExpSsEP2qPOxG2SP2o4yFRNaMr__BHpa2XOIS-RfO5ZQhCnhkzfnrrzt1uEOpq-jsh5HZmia1VPL0UcYWQ-NUML8X6ygCzqauelj7ixTA7evubpvUea3VZUmBdl4SFFWV');
+Configure:: write('PUSH_API_KEY', 'AAAASFrQQrw:APA91bGE5PPExpSsEP2qPOxG2SP2o4yFRNaMr__BHpa2XOIS-RfO5ZQhCnhkzfnrrzt1uEOpq-jsh5HZmia1VPL0UcYWQ-NUML8X6ygCzqauelj7ixTA7evubpvUea3VZUmBdl4SFFWV');
 
 
 /************************************* Messages *************************************/

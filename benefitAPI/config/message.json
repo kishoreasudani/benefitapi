@@ -43,7 +43,7 @@
     },
     "coin_validation": {
         "statusCode": "400",
-        "not_enough_coin": "You does not have require coins. Please try again or earn more coins.",
+        "not_enough_coin": "Sorry! You currently do not have the required coins to redeem this reward.",
         "not_found": "Data does not exist",
         "reference_id": "Reference id cannot be blank",
         "user_id": "User id cannot be blank"

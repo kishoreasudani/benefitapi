@@ -7,25 +7,27 @@ const dates = require('../../utils/date');
 //Get Coin History
 getList = (postParams) => {
     return new Promise(function (resolve, reject) {
-        let totalcoin = "select total_coins from coins WHERE user_id=" + postParams.user_id;
+        let totalcoin = "select total_coins,total_used from coins WHERE user_id=" + postParams.user_id;
          connections.ExecuteSelectQuery(totalcoin)
             .then(totalcoinData => {
-              let last7Days = "select sum(coins) as totalCoins ,DAYNAME(created) as DateOnly , created from coin_history WHERE user_id=" + postParams.user_id +" And created >= (DATE(NOW()) - INTERVAL 7 DAY) GROUP BY DateOnly order by created DESC ";
+              let last7Days = "select sum(coins) as totalCoins ,DAYNAME(created) as DateOnly , created from coin_history WHERE user_id=" + postParams.user_id +" And created >= (DATE(NOW()) - INTERVAL 6 DAY) AND type = 'earn' GROUP BY DateOnly order by created DESC ";
                 connections.ExecuteSelectQuery(last7Days)
                 .then(last7DaysData => {
 
-                  let currentMonth = "SELECT SUM(coins) AS totalCoins FROM coin_history WHERE user_id=" + postParams.user_id +" AND  MONTH(created) = MONTH(NOW())";
+                  let currentMonth = "SELECT SUM(coins) AS totalCoins FROM coin_history WHERE user_id=" + postParams.user_id +" AND type = 'earn' AND  MONTH(created) = MONTH(NOW())";
 
                     connections.ExecuteSelectQuery(currentMonth)
                     .then(currentMonthData => {
                          
-                         let todayQuery = "select sum(coins) as totalCoins from coin_history WHERE user_id=" + postParams.user_id +" And created >= DATE(NOW())";
+                         let todayQuery = "select sum(coins) as totalCoins from coin_history WHERE user_id=" + postParams.user_id +" AND type = 'earn' And created >= DATE(NOW())";
+                         
 
                           connections.ExecuteSelectQuery(todayQuery)
                              .then(todayData => {
 
                           let finalData = new Object();
                           finalData['totalCoin'] = totalcoinData.length>0?totalcoinData[0].total_coins:0;
+                          finalData['totalUsed'] = totalcoinData.length>0?totalcoinData[0].total_used:0;
                           finalData['currentMonth'] = currentMonthData[0].totalCoins!=null?currentMonthData[0].totalCoins:0;
                           finalData['todayCoin'] = todayData[0].totalCoins!=null?todayData[0].totalCoins:0;
                           finalData['last7days'] = last7DaysData;

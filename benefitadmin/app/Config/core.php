@@ -53,6 +53,8 @@
 		'level' => E_ALL & ~E_DEPRECATED,
 		'trace' => true
 	));
+    //phpinfo();
+    date_default_timezone_set("Asia/Kolkata");
 
 /**
  * Configure the Exception handler used for uncaught exceptions. By default,

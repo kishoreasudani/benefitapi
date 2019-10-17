@@ -20,7 +20,7 @@ getList = (postParams) => {
                 + "%' OR description LIKE '%" + postParams.search_text + "%' ) ";
         }
 
-        let sqlQuery = "Select * from vouchers WHERE status='" + enums.enmVoucherStatus.active + "' AND end_date>=UTC_DATE()";
+        let sqlQuery = "Select * from vouchers WHERE status='" + enums.enmVoucherStatus.active + "' AND end_date>=UTC_DATE() ORDER BY id DESC ";
         sqlQuery = sqlQuery + condition + pagingCondition;
         console.log(sqlQuery)
 

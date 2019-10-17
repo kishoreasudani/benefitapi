@@ -20,6 +20,14 @@ class Voucher extends WecontrolAppModel {
 						'message' => 'Name should be alphabetic.'
 					)			
 			),
+
+			'vendor_id' => array(
+					'notEmpty' => array(
+						'rule'	=> 'notEmpty',
+						'message'=>	'Please select vendor.'
+					),			
+			    ),
+
 			'code' => array(
 					'notEmpty' => array(
 						'rule'	=> 'notEmpty',

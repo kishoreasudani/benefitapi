@@ -21,16 +21,19 @@
         } else if( is_string( $submenu_name ) ) {
            
             return ( $thisObj->request->params['controller'] == $menu_name && $thisObj->request->params['action'] == $submenu_name )?'active':'';
+
         }
     }
    
     $controller = $this->request->controller;
     $action = $this->request->action;
     $notifications = '';
+
     if($controller == 'notifications' && in_array($action,array('send_notifications', 'index', 'notification_data', 'add_notification', 'user_notifications', 'user_notifications_data'))){
         $notifications = 'active';
     }
-    
+
+
     
    
 ?>
@@ -51,6 +54,14 @@
                             array( 'escape' => false)
                         ), array('class'=> sprintf('%s', subMenuClass('dashboard', 'index')),'title'=>'Dashboard')
                     );
+
+                    echo $this->Html->tag('li',
+                        $this->Html->link('<i class="material-icons">group</i><span>Vendors</span>',
+                            array('controller' => 'vouchers', 'action' => 'vendors'),
+                            array( 'escape' => false)
+                        ), array('class'=> sprintf('%s', subMenuClass('vouchers', array('vendors','add_vendors','edit_vendors', 'vendors_data'))),'title'=>'Vendors')
+                    );
+
                     
                     echo $this->Html->tag('li',
                         $this->Html->link('<i class="material-icons">collections_bookmark</i><span>Vouchers</span>',

@@ -10,7 +10,7 @@ var fcm = new FCM(serverKey);
 getNotification = (user_id) => {
     return new Promise(function (resolve, reject) {
         // mySQl query
-        const sqlQuery = "Select * from user_notifications WHERE receiver_id='" + user_id + "' AND status='active'";
+        const sqlQuery = "Select * from user_notifications WHERE receiver_id='" + user_id + "' AND status='active' order by id DESC";
         //Execute query
         //AND read_status='unread'
         connections.ExecuteSelectQuery(sqlQuery)
