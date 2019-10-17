@@ -172,9 +172,6 @@ class VouchersController extends WecontrolAppController {
 				);
 			}
 
-
-
-
 		}else{
 
 			if(!empty($checkVendor) && $checkVendor>0){
@@ -245,15 +242,13 @@ class VouchersController extends WecontrolAppController {
 
 
     
-    public function add_voucher( ) {
+    public function add_voucher($vendor_id=null) {
 		$this->_is_user_login (); 
 		$message = "";	
 		if(!empty($this->data)) {
 			$this->Voucher->set($this->request->data);
 			$this->Voucher->setValidation('add');
 			if($this->Voucher->validates())  {
-
-
 				$this->request->data['Voucher']['status'] = 'active';
 				$this->request->data['Voucher']['created_by'] = $this->Session->read('Auth.Admin.id');
                 $this->request->data['Voucher']['start_date'] = date('Y-m-d H:i',strtotime($this->request->data['Voucher']['start_date']));
@@ -336,6 +331,9 @@ class VouchersController extends WecontrolAppController {
 
 			echo json_encode(array('success'=>$success, 'message'=>$message));
 			die;
+		}else{
+
+			$this->request->data['Voucher']['vendor_id'] = base64_decode($vendor_id);
 		}	
 
 		$vendorsList =  $this->Vendor->find('list',array('fields'=>array('Vendor.id','Vendor.name'),'order'=>array('Vendor.name'=>'ASC')));

@@ -2,10 +2,10 @@
     <div class="container-fluid">
         <div class="block-header relative">
             <h2 class="text-uppercase">
-				Vouchers <?php echo $vendor_id; ?>
+				Vouchers 
             </h2> 
 			<?php   
-			echo $this->Html->link('Add Voucher',array('controller'=>'vouchers','action'=>'add_voucher'),array('class' => 'btn bg-orange waves-effect pull-right btn-right-position','escape'=>false)) ; 
+			echo $this->Html->link('Add Voucher',array('controller'=>'vouchers','action'=>'add_voucher/'.base64_encode($vendor_id)),array('class' => 'btn bg-orange waves-effect pull-right btn-right-position','escape'=>false)) ; 
             ?>          
         </div>   
         <?php echo $this->element('flash_message'); ?>  	
