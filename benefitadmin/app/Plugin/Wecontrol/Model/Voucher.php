@@ -11,14 +11,7 @@ class Voucher extends WecontrolAppModel {
 						'rule'	=> 'notEmpty',
 						'message'=>	'Please enter name.'
 					),
-					'between' => array(
-						'rule' => array('lengthBetween', 3, 20),
-						'message' => 'Name should be between 3 to 20 characters'
-					),
-					'alpha' => array(
-						"rule" => array('custom', "/^[a-zA-Z ]+$/"),
-						'message' => 'Name should be alphabetic.'
-					)			
+								
 			),
 
 			'vendor_id' => array(
