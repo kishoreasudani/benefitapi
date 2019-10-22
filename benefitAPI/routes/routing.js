@@ -1,4 +1,3 @@
-
 const authController = require('./controllers/auth.controller');
 const userController = require('./controllers/user.controller');
 const notificationController = require('./controllers/notification.controller');
@@ -68,7 +67,6 @@ const routes = [
         handler: userController.updateNotificationStatus
     },
 
- 
    
     // notifications
 

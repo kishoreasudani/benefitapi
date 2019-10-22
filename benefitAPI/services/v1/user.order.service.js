@@ -65,15 +65,32 @@ buyBoucher = (postParams) => {
                         if (voucherResult[0].coins_required != null && voucherResult[0].coins_required > 0) {
                             if (coins >= voucherResult[0].coins_required) {
 
-                                updateUsedCoin(postData).then(saveResult => {
-                                    createUserOrder(postData).then(res => {
-                                        resolve(res);
-                                    }).catch(err => {
-                                        reject(err);
-                                    })
+
+                               var checkExistenceCoucher = "Select count(id) as total from user_orders where reference_id =" +postParams.reference_id;
+                               connections.ExecuteSelectQuery(checkExistenceCoucher)
+                                .then(checkexistanceData => {
+                                    if(checkexistanceData[0].total==0){
+                                         updateUsedCoin(postData).then(saveResult => {
+                                            createUserOrder(postData).then(res => {
+                                                resolve(res);
+                                            }).catch(err => {
+                                                reject(err);
+                                            })
+                                        }).catch(err => {
+                                            reject(err);
+                                        })
+                                    }else{
+                                         let messagedata = 'This reward is no longer available.';
+                                         let err = utils.errorResponse(message.coin_validation.statusCode, messagedata)
+                                         reject(err);
+                                    }
+                                        
+
+
                                 }).catch(err => {
-                                    reject(err);
-                                })
+                                      reject(err);
+                                });
+                           
                             }
                             else {
                                 let err = utils.errorResponse(message.coin_validation.statusCode, message.coin_validation.not_enough_coin)
@@ -104,6 +121,8 @@ buyBoucher = (postParams) => {
 
     })
 }
+
+
 
 createUserOrder = (postData) => {
     return new Promise(function (resolve, reject) {
