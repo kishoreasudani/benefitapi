@@ -7,7 +7,7 @@ class VouchersController extends WecontrolAppController {
 
 	function beforeFilter(){
 		parent::beforeFilter();
-		$this->Auth->allow('index', 'vouchers_data', 'add_voucher', 'edit_voucher', 'view_voucher', 'delete_voucher','vendors','vendors_data','delete_vendors','add_vendor','edit_vendor');			
+		$this->Auth->allow('index', 'vouchers_data', 'add_voucher', 'edit_voucher', 'view_voucher', 'delete_voucher','vendors','vendors_data','delete_vendors','add_vendor','edit_vendor','add_bulk_voucher');			
 	}
 
 
@@ -55,12 +55,35 @@ class VouchersController extends WecontrolAppController {
 		$this->_is_user_login (); 
 		$message = "";	
 		if(!empty($this->data)) {
+
+           // pr($this->request->data); die();
+
 			$this->Vendor->set($this->request->data);
 			$this->Vendor->setValidation('add');
 			if($this->Vendor->validates())  {
 				$this->request->data['Vendor']['status'] = 'active';
+
+			    $tmpname = $this->request->data['Vendor']['logo']['tmp_name'];  
+                $logoname = $this->request->data['Vendor']['logo']['name'];  
+                $ext = pathinfo($logoname, PATHINFO_EXTENSION); 
+                $this->request->data['Vendor']['logo']= 'logo_'.time().'.'.$ext;
+
+
+                $backtmpname = $this->request->data['Vendor']['background_logo']['tmp_name'];  
+                $backlogoname = $this->request->data['Vendor']['background_logo']['name'];  
+                $backext = pathinfo($backlogoname, PATHINFO_EXTENSION); 
+                $this->request->data['Vendor']['background_logo']= 'backlogo_'.time().'.'.$backext;
+
+
+
                 $this->Vendor->create();
 	            if($this->Vendor->save($this->request->data,false)) {
+	            	$dowloadPath = Configure::read('SiteSettings.Relative.VendorLogo');
+	            	@move_uploaded_file($tmpname, $dowloadPath.$this->request->data['Vendor']['logo']);
+
+	            	@move_uploaded_file($backtmpname, $dowloadPath.$this->request->data['Vendor']['background_logo']);
+
+
 	            	$success = true;
 					$message = "The Vendor has been saved.";
 					//$this->Session->setFlash('The Vendor has been saved.', 'default', null, 'success');
@@ -91,13 +114,65 @@ class VouchersController extends WecontrolAppController {
         $id = base64_decode($id);
 		$this->_is_user_login (); 
 		$message = "";	
-		if(!empty($this->data)) {
-			$this->Vendor->set($this->request->data);
-            $this->request->data['Vendor']['id'] = $id;
 
+        $olddata =  $this->Vendor->findById($id);
+        $logo = $olddata['Vendor']['logo'];
+
+        $backlogo = $olddata['Vendor']['background_logo'];
+
+		if(!empty($this->data)) {
+		
+            $this->request->data['Vendor']['id'] = $id;
+            $this->Vendor->set($this->request->data);
 			$this->Vendor->setValidation('edit');
 			if($this->Vendor->validates())  {
+
+                $upload = "No";
+                $backupload = "No";
+                $extData =  array('jpeg','jpg','png','gif');
+
+              if(isset($this->request->data['Vendor']['logo']['tmp_name']) && $this->request->data['Vendor']['logo']['tmp_name']!=''){
+			    	$tmpname = $this->request->data['Vendor']['logo']['tmp_name'];  
+                    $logoname = $this->request->data['Vendor']['logo']['name']; 
+                    $ext = pathinfo($logoname, PATHINFO_EXTENSION); 
+	                if(in_array($ext,$extData)){
+	                	$upload = "Yes";
+	                     $this->request->data['Vendor']['logo']= 'logo_'.time().'.'.$ext;
+	                }
+
+               }else{
+
+               	   $this->request->data['Vendor']['logo']= $logo;
+               }
+
+
+               if(isset($this->request->data['Vendor']['background_logo']['tmp_name']) && $this->request->data['Vendor']['background_logo']['tmp_name']!=''){
+                 	  $backtmpname = $this->request->data['Vendor']['background_logo']['tmp_name'];  
+                      $backlogoname = $this->request->data['Vendor']['background_logo']['name'];
+
+                      $ext = pathinfo($backlogoname, PATHINFO_EXTENSION); 
+		              if(in_array($ext,$extData)){
+		                	 $backupload = "Yes";
+		                     $this->request->data['Vendor']['background_logo']= 'backlogo_'.time().'.'.$ext;
+		              } 
+
+               }else{
+               	   $this->request->data['Vendor']['background_logo']= $backlogo;
+               }
+             
 	            if($this->Vendor->save($this->request->data,false)) {
+
+	            	if($upload=='Yes'){
+
+	            		 $dowloadPath = Configure::read('SiteSettings.Relative.VendorLogo');
+	            	     @move_uploaded_file($tmpname, $dowloadPath.$this->request->data['Vendor']['logo']);
+	            	}
+
+	            	if($backupload=='Yes'){
+	            		 $dowloadPath = Configure::read('SiteSettings.Relative.VendorLogo');
+	            	     @move_uploaded_file($backtmpname, $dowloadPath.$this->request->data['Vendor']['background_logo']);
+	            	}
+
 	            	$success = true;
 					$message = "The Vendor has been updated.";
 					//$this->Session->setFlash('The Vendor has been saved.', 'default', null, 'success');
@@ -120,8 +195,12 @@ class VouchersController extends WecontrolAppController {
 			echo json_encode(array('success'=>$success, 'message'=>$message));
 			die;
 		}else{
-			$this->data = $this->Vendor->findById($id);
+			$this->data = $olddata;
 		}	
+		$this->set('logo',$logo);
+		$this->set('backlogo',$backlogo);
+
+
     }
 
 
@@ -238,10 +317,7 @@ class VouchersController extends WecontrolAppController {
 			$this->redirect('/');
 		}
     }
-
-
-
-    
+  
     public function add_voucher($vendor_id=null) {
 		$this->_is_user_login (); 
 		$message = "";	
@@ -255,57 +331,6 @@ class VouchersController extends WecontrolAppController {
                 $this->request->data['Voucher']['end_date'] = date('Y-m-d H:i',strtotime($this->request->data['Voucher']['end_date']));
                 $this->Voucher->create();
 	            if($this->Voucher->save($this->request->data,false)) {
-	            	$last_insert_id    	= $this->Voucher->getLastInsertID();
-		           	$dowloadPath   	= Configure::read('SiteSettings.Relative.VoucherImage');
-		            if(!empty($this->data['Voucher']['image1']['name']) && !empty($this->data['Voucher']['image_bg']['name'])){
-		                $fileName    = $this->data['Voucher']['image1']['name'];
-		                $fileType    = $this->data['Voucher']['image1']['type'];
-		                $fileTmpName = $this->data['Voucher']['image1']['tmp_name'];
-		                $fileError   = $this->data['Voucher']['image1']['error'];
-		                $fileSize    = $this->data['Voucher']['image1']['size'];
-		                $file_type   = explode('.', $fileName);
-		                $ext_name    = array_reverse($file_type);
-		                $ext         = strtolower($ext_name[0]);
-		                $fileNewName = strtolower($ext_name[1]).'_'.time().'.'.$ext;
-	                   	if(!is_dir($dowloadPath)){
-	                    	@mkdir($dowloadPath, 0777);
-	                  	}
-	                   	@move_uploaded_file($fileTmpName, $dowloadPath.'/'.$fileNewName);
-	                   	// $result3 = $this->PImage->resizeImage(
-						// 	$cType = 'resizeCrop',
-						// 	$fileNewName, 
-						// 	$dowloadPath.DS,
-						// 	$dowloadPath.DS.$fileNewName,
-						// 	'1208',
-						// 	'400',
-						// 	$quality = 100,
-						// 	$bgcolor = true
-						// );
-						$fileName_bg    = $this->data['Voucher']['image_bg']['name'];
-		                $fileType_bg    = $this->data['Voucher']['image_bg']['type'];
-		                $fileTmpName_bg = $this->data['Voucher']['image_bg']['tmp_name'];
-		                $fileError_bg   = $this->data['Voucher']['image_bg']['error'];
-		                $fileSize_bg    = $this->data['Voucher']['image_bg']['size'];
-		                $file_type_bg   = explode('.', $fileName_bg);
-		                $ext_name_bg    = array_reverse($file_type_bg);
-		                $ext_bg         = strtolower($ext_name_bg[0]);
-		                $fileNewName_bg = strtolower($ext_name_bg[1]).'_'.time().'.'.$ext_bg;
-	                   	if(!is_dir($dowloadPath)){
-	                    	@mkdir($dowloadPath, 0777);
-	                  	}
-	                   	@move_uploaded_file($fileTmpName_bg, $dowloadPath.'/'.$fileNewName_bg);
-	                   	// $result3 = $this->PImage->resizeImage(
-						// 	$cType = 'resizeCrop',
-						// 	$fileNewName_bg, 
-						// 	$dowloadPath.DS,
-						// 	$dowloadPath.DS.$fileNewName_bg,
-						// 	'1208',
-						// 	'400',
-						// 	$quality = 100,
-						// 	$bgcolor = true
-						// );		
-	                    $this->Voucher->updateAll(array('Voucher.image'=>"'".$fileNewName."'", 'Voucher.bg_image'=>"'".$fileNewName_bg."'"),array('Voucher.id'=>$last_insert_id));
-		            }
 					$success = true;
 					$message = "The voucher has been saved.";
 					$this->Session->setFlash('The voucher has been saved.', 'default', null, 'success');
@@ -353,59 +378,8 @@ class VouchersController extends WecontrolAppController {
 			if($this->Voucher->validates())  {
 				$this->request->data['Voucher']['status'] = 'active';
 				$this->request->data['Voucher']['modified_by'] = $this->Session->read('Auth.Admin.id');
-                $this->Voucher->create();
 	            if($this->Voucher->save($this->request->data,array('Voucher.id' => $id))) {
-	            	$last_insert_id    	= $id;
-		           	$dowloadPath   	= Configure::read('SiteSettings.Relative.VoucherImage');
-		            if(!empty($this->data['Voucher']['image1']['name']) && !empty($this->data['Voucher']['image_bg']['name'])){
-		                $fileName    = $this->data['Voucher']['image1']['name'];
-		                $fileType    = $this->data['Voucher']['image1']['type'];
-		                $fileTmpName = $this->data['Voucher']['image1']['tmp_name'];
-		                $fileError   = $this->data['Voucher']['image1']['error'];
-		                $fileSize    = $this->data['Voucher']['image1']['size'];
-		                $file_type   = explode('.', $fileName);
-		                $ext_name    = array_reverse($file_type);
-		                $ext         = strtolower($ext_name[0]);
-		                $fileNewName = strtolower($ext_name[1]).'_'.time().'.'.$ext;
-	                   	if(!is_dir($dowloadPath)){
-	                    	@mkdir($dowloadPath, 0777);
-	                  	}
-	                   	@move_uploaded_file($fileTmpName, $dowloadPath.'/'.$fileNewName);
-	                   	// $result3 = $this->PImage->resizeImage(
-						// 	$cType = 'resizeCrop',
-						// 	$fileNewName, 
-						// 	$dowloadPath.DS,
-						// 	$dowloadPath.DS.$fileNewName,
-						// 	'1208',
-						// 	'400',
-						// 	$quality = 100,
-						// 	$bgcolor = true
-						// );
-						$fileName_bg    = $this->data['Voucher']['image_bg']['name'];
-		                $fileType_bg    = $this->data['Voucher']['image_bg']['type'];
-		                $fileTmpName_bg = $this->data['Voucher']['image_bg']['tmp_name'];
-		                $fileError_bg   = $this->data['Voucher']['image_bg']['error'];
-		                $fileSize_bg    = $this->data['Voucher']['image_bg']['size'];
-		                $file_type_bg   = explode('.', $fileName_bg);
-		                $ext_name_bg    = array_reverse($file_type_bg);
-		                $ext_bg         = strtolower($ext_name_bg[0]);
-		                $fileNewName_bg = strtolower($ext_name_bg[1]).'_'.time().'.'.$ext_bg;
-	                   	if(!is_dir($dowloadPath)){
-	                    	@mkdir($dowloadPath, 0777);
-	                  	}
-	                   	@move_uploaded_file($fileTmpName_bg, $dowloadPath.'/'.$fileNewName_bg);
-	                   	// $result3 = $this->PImage->resizeImage(
-						// 	$cType = 'resizeCrop',
-						// 	$fileNewName_bg, 
-						// 	$dowloadPath.DS,
-						// 	$dowloadPath.DS.$fileNewName_bg,
-						// 	'1208',
-						// 	'400',
-						// 	$quality = 100,
-						// 	$bgcolor = true
-						// );
-	                    $this->Voucher->updateAll(array('Voucher.image'=>"'".$fileNewName."'", 'Voucher.bg_image'=>"'".$fileNewName_bg."'"),array('Voucher.id'=>$last_insert_id));
-		            }
+	            	
 					$this->Session->setFlash('Voucher has been updated successfully.', 'default', null, 'success');
 					$success = true;
 					$message = "The voucher has been updated successfully.";
@@ -435,4 +409,89 @@ class VouchersController extends WecontrolAppController {
 	   $vendorsList =  $this->Vendor->find('list',array('fields'=>array('Vendor.id','Vendor.name'),'order'=>array('Vendor.name'=>'ASC')));
 		$this->set('vendorsList',$vendorsList);
 	}
+
+
+
+	public function add_bulk_voucher($vendor_id=null) {
+		$this->_is_user_login (); 
+		$message = "";	
+		$vendor_id = base64_decode($vendor_id);
+		if(!empty($this->data) && $vendor_id!='' && $vendor_id>0) {
+			     $data = $this->request->data['Voucher']['csvFile'];
+			   	if(isset($data['name']) && $data['name']!=''){
+					 $ext = pathinfo($data['name'], PATHINFO_EXTENSION); 
+					 if (strtolower($ext)=='csv') {      
+					      $error = 0;             
+	                     $count_rows = count(explode("\r\n", file_get_contents($data['tmp_name'])));
+	                    // die();
+	                      if($count_rows>=1){
+	                      	  if (($handle = fopen($data['tmp_name'], "r")) !== FALSE) {
+								  fgetcsv($handle);  
+								
+								   while (($data = fgetcsv($handle, 1000, ",")) !== FALSE) {
+							     	$voucherName = trim($data[0]); 
+									$code = trim($data[1]);
+									$amount = trim($data[2]);
+									$coinsRequired =   trim($data[3]);
+									$startDate =   trim($data[4]);	
+									$etartDate =   trim($data[4]);	
+									$tc =   trim($data[4]);	
+									$description =   trim($data[4]);	
+
+									if($voucherName !='' && $code!='' && $coinsRequired!='' &&  $startDate!='' && $etartDate!=''){
+                                        $voucheData['Voucher']['vendor_id'] = $vendor_id;
+                                        $voucheData['Voucher']['name'] = $voucherName;
+                                        $voucheData['Voucher']['code'] = $code;
+                                        $voucheData['Voucher']['coins_required'] = $coinsRequired;
+                                        $voucheData['Voucher']['amount'] = $amount;
+                                        $voucheData['Voucher']['descriptions'] = $description;
+                                        $voucheData['Voucher']['terms_and_conditions'] = $tc;
+										$voucheData['Voucher']['status'] = 'active';
+										$voucheData['Voucher']['created_by'] = $this->Session->read('Auth.Admin.id');
+										$voucheData['Voucher']['start_date'] = date('Y-m-d H:i',strtotime($startDate));
+										$voucheData['Voucher']['end_date'] = date('Y-m-d H:i',strtotime($etartDate));
+
+										 //prd($voucheData); die();
+										$this->Voucher->create();
+										$this->Voucher->save($voucheData,false); 
+									}else{
+										$error++;
+									}
+								}
+								fclose($handle);
+								  $error_message ='';
+						          if($error>=1){
+	                                 	$error_message = '<br/><span style="color:red">But there are  '.$error.' records invalid in sheet</span>';
+	                                 }
+	                                 $success = true;
+	                                $message = 'Voucher are successfully import '.$error_message;
+	                               
+							}else{
+								$success = false;
+						        $message = "There are some problem in csv file.";		
+							}                                       
+	                      }else{
+	                      	   $success = false;
+						       $message = "Please fill data in csv file.";
+	                      }
+	                   				 	
+					 }else{
+		    		     $success = false;
+						 $message = "Please upload only valid csv file.";
+					 }
+
+	    	    }else{
+	    			$success = false;
+					$message = "Please upload csv file first.";
+
+	        	}
+		
+			echo json_encode(array('success'=>$success, 'message'=>$message));
+			die;
+		}	
+
+    }
+
+
+
 }

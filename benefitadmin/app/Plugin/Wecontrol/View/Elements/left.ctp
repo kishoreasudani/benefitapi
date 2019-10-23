@@ -59,12 +59,12 @@
                         $this->Html->link('<i class="material-icons">group</i><span>Vendors</span>',
                             array('controller' => 'vouchers', 'action' => 'vendors'),
                             array( 'escape' => false)
-                        ), array('class'=> sprintf('%s', subMenuClass('vouchers', array('vendors','add_vendors','edit_vendors', 'vendors_data'))),'title'=>'Vendors')
+                        ), array('class'=> sprintf('%s', subMenuClass('vouchers', array('vendors','add_vendor','edit_vendor', 'vendors_data'))),'title'=>'Vendors')
                     );
 
                     
                     echo $this->Html->tag('li',
-                        $this->Html->link('<i class="material-icons">collections_bookmark</i><span>Vouchers</span>',
+                        $this->Html->link('<i class="material-icons">collections_bookmark</i><span>All Vouchers</span>',
                             array('controller' => 'vouchers', 'action' => 'index'),
                             array( 'escape' => false)
                         ), array('class'=> sprintf('%s', subMenuClass('vouchers', array('index','add_voucher','edit_voucher', 'vouchers_data', 'view_voucher'))),'title'=>'Vouchers')

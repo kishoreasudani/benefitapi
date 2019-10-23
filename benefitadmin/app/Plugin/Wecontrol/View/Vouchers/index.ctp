@@ -1,15 +1,60 @@
+
 <section class="content content-custom">
+	 <?php echo $this->element('flash_message'); ?>  
     <div class="container-fluid">
-        <div class="block-header relative">
+        <div class="block-header relative rows">
             <h2 class="text-uppercase">
 				Vouchers 
-            </h2> 
-			<?php   
-			echo $this->Html->link('Add Voucher',array('controller'=>'vouchers','action'=>'add_voucher/'.base64_encode($vendor_id)),array('class' => 'btn bg-orange waves-effect pull-right btn-right-position','escape'=>false)) ; 
+			<?php 
+
+           if($vendor_id!='' && $vendor_id>0){
+			  echo $this->Html->link('Add Bulk Voucher','javascript:void(0)',array('class' => 'btn bg-orange waves-effect margin-left15 pull-right','escape'=>false,'id'=>'add_bulk_voucher')) ;  
+		   }
+
+			echo $this->Html->link('Add Voucher',array('controller'=>'vouchers','action'=>'add_voucher/'.base64_encode($vendor_id)),array('class' => 'btn bg-orange waves-effect  pull-right','escape'=>false)) ; 
             ?>          
+            </h2> 
         </div>   
-        <?php echo $this->element('flash_message'); ?>  	
+       	
 	   	<div class="row">
+
+	   		 <div class="col-sm-12" id="addBulkVoucherformdata" style="display: none;">
+                <div class="row clearfix">
+			        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+			            <div class="card">
+			                <div class="header">
+			                    <h2>
+			                        Add Bulk Vouchers
+			                    </h2>
+			                </div>
+			                <div class="body">
+			                    <?php echo $this->Form->create('Voucher',array('url' => 'javascript:void(0)' , 'novalidate' => true,'id' => 'BulkVoucherAddForm', 'enctype' => "multipart/form-data")) ;?>                        
+			                    <div class="row">
+			                        <div class="col-md-6">
+			                        	<div class="form-group"> 
+			                              <div class="rows fileUpload btn btn-primary">
+                                            <span class="rows upload_button pull-left">Upload Csv file</span>
+                                            <?php echo $this->Form->file('Voucher.csvFile', array('class'=>'upload jq_file_upload')); ?>
+                                          </div>
+                                          <span id="csvError" style="color: red"> </span>
+                                        </div>
+                                      <?php  
+
+                                         $filepath = Configure::read('SiteSettings.Absolute.VoucherImage').'benefit-Add-bulk-vouchers.csv'; 
+
+                                      echo $this->Html->link('Download Sample file',$filepath,array('class' => 'btn bg-orange waves-effect margin-left15 m-t-15','escape'=>false,'id'=>'add_bulk_voucher')) ;?>
+			                        </div>
+			                        <div class="col-md-4">
+			                              <button type="submit" class="btn btn-primary waves-effect align-center jq_add_bulk_voucher">Submit</button>
+			                            
+			                        </div>
+			                    </div>
+			               <?php echo $this->Form->end(); ?>
+			           </div>
+			           </div>
+                    </div>
+                 </div>
+	   		 </div>
 	   		<div class="col-sm-12">
 	   			<div class="card no-margin-b">
 		   			<div class="header">
@@ -119,10 +164,49 @@ $(document).ready(function(){
 	});
 
 	function switchViewUrl(){
-	
 		return url = adminUrl+'vouchers/vouchers_data';	
 		
 	}
+
+	$("#add_bulk_voucher").click(function () {
+        $("#addBulkVoucherformdata").toggle()
+    });
+
+
+   var vendor_id = "<?php echo base64_encode($vendor_id); ?>";
+	$(".jq_add_bulk_voucher").click( function() {
+        $("#loading_image").show();
+        $('#csvError').html('');
+        var ajaxOptions = {
+        url         : adminUrl+'vouchers/add_bulk_voucher/'+vendor_id,
+        resetForm   : false,
+        dataType    : 'json',
+        success     : ajaxSuccess
+        };
+        $( '#BulkVoucherAddForm' ).ajaxForm( ajaxOptions );
+        $( '#BulkVoucherAddForm' ).on('submit',function() {
+        $("#loading_image").show();
+        });
+        function ajaxSuccess( data , responseCode , xhr ) {  
+
+            if(data.success == false){
+               var errors  = data.message;
+               $('#csvError').html(errors);
+               $("#loading_image").hide();
+            }else if(data.success == true){
+               $(".success_box").show();
+               $(".success_msg").html(data.message);
+               $("#addBulkVoucherformdata").toggle()
+               $("#BulkVoucherAddForm").trigger("reset");
+             	var url = adminUrl+'vouchers/vendors_data';
+	            loadPiece(url,'#empdata');
+            
+                setTimeout(function(){ window.location.href = adminUrl+'vouchers/index/'+vendor_id; }, 300);      
+            } 
+        }
+    });
+
+
 
 });
 </script>

@@ -19,7 +19,42 @@ class Vendor extends AppModel {
 					
 			),
 
+		
+			'logo' => array(
+		            'rule1'=>array(
+		            'rule' => array('extension',array('jpeg','jpg','png','gif')),
+		            'required' => 'true',
+		            'allowEmpty' => false,
+		            'message' => 'Select a valid logo',
+		            'on' => 'create',
+		            'last'=>true
+		      ),
+		     'rule2'=>array(
+		        'rule' => array('extension',array('jpeg','jpg','png','gif')),
+		        'message' => 'Select a valid logo',
+		        'on' => 'update',
+		       ),
+		    ),
+
+		    'background_logo' => array(
+		            'rule1'=>array(
+		            'rule' => array('extension',array('jpeg','jpg','png','gif')),
+		            'required' => 'true',
+		            'allowEmpty' => false,
+		            'message' => 'Select a valid background logo',
+		            'on' => 'create',
+		            'last'=>true
+		      ),
+		     'rule2'=>array(
+		        'rule' => array('extension',array('jpeg','jpg','png','gif')),
+		        'message' => 'Select a valid background logo',
+		        'on' => 'update',
+		       ),
+		    ),
+
 		),
+
+
 				/*Edit category*/
 		'edit' => array(			
 			'name' 	=> array(
@@ -31,7 +66,10 @@ class Vendor extends AppModel {
 						'rule'	=> 'isUnique',
 						'message'=>	'Name is already exists.'
 					),
-			)
+			),
+
+		
+
 		)
 	
 			

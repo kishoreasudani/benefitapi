@@ -9,6 +9,11 @@
                       <th width="5%" style="text-align:center;">#</th>
                       <th  class="sortLink" width="15%"><?php echo $this->Paginator->sort('Vendor.name','Name'); ?></th>      
                       <th  class="sortLink" width="15%">Vouchers</th>
+
+                       <th  class="sortLink" width="15%">Logo</th>
+
+                        <th  class="sortLink" width="15%">Background</th>
+
                       <th class="sortLink" width="15%" style="text-align:center;"><?php echo $this->Paginator->sort('Vendor.status','Status'); ?></th>
                       <th class="sortLink" width="15%" style="text-align:center;"><?php echo $this->Paginator->sort('Vendor.created','Created'); ?></th>                     
                       <th style="text-align:center;" width="15%">Action</th>
@@ -24,6 +29,14 @@
                       <td align="center"><?php echo $i++; ?></td>
                       <td><?php echo $value['Vendor']['name'] ?> </td>
                       <td><?php echo $value['Vendor']['count'] ?> </td>
+
+                      <td> <?php $imagepath = Configure::read('SiteSettings.Absolute.VendorLogo').$value['Vendor']['logo'];                               
+                           echo $this->Html->image($imagepath,array('width'=>'60px','height'=>'50px'));?>
+                       </td>
+
+                        <td> <?php $imagepath = Configure::read('SiteSettings.Absolute.VendorLogo').$value['Vendor']['background_logo'];                               
+                           echo $this->Html->image($imagepath,array('width'=>'60px','height'=>'50px'));?>
+                       </td>
 
                       <td><?php echo $this->Form->select('Vendor.status',Configure::read('General.status'),array('default' => $value['Vendor']['status'],'class'=>'form-control show-tick change_status','label'=>false,'empty' => false,'id' => base64_encode( $value['Vendor']['id'] )));?></td> 
 

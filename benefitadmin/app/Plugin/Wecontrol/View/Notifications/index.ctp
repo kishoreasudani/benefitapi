@@ -1,15 +1,15 @@
 <section class="content content-custom">
     <div class="container-fluid">
-        <div class="block-header relative">
+        <div class="block-header relative rows">
             <h2 class="text-uppercase">
 				Push Notifications
-            </h2>  
 			<?php   
-			echo $this->Html->link('Send Notification',array('controller'=>'notifications','action'=>'send_notifications'),array('class' => 'btn bg-orange waves-effect pull-right btn-right-position','escape'=>false)) ; 
+			echo $this->Html->link('Send Notification',array('controller'=>'notifications','action'=>'send_notifications'),array('class' => 'btn bg-orange waves-effect pull-right margin-left15','escape'=>false)) ; 
             ?>
 			<?php   
 			echo $this->Html->link('Add Notification',array('controller'=>'notifications','action'=>'add_notification'),array('class' => 'btn bg-orange waves-effect pull-right ','escape'=>false)) ; 
             ?>         
+            </h2>  
         </div>   
         <?php echo $this->element('flash_message'); ?>  	
 	   	<div class="row">

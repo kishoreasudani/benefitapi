@@ -112,10 +112,10 @@
                     
                     <div class="row">
                         <div class="col-md-6">
-                            <label for="email_address">Amount<span class="red_star">*</span></label>
+                            <label for="email_address">Amount<span class="red_star"></span></label>
                             <div class="form-group">
                                 <div class="form-line">
-                                    <?php echo $this->Form->text('Voucher.amount',array('placeholder' => 'Enter Voucher Amount','class' => 'form-control')); ?>
+                                    <?php echo $this->Form->number('Voucher.amount',array('placeholder' => 'Enter Voucher Amount','class' => 'form-control','value'=>0)); ?>
                                 </div>
                             </div>  
                         </div>
@@ -161,12 +161,12 @@
                             <label for="email_address">Description</label>
                             <div class="form-group">
                                 <div class="form-line">
-                                    <?php echo $this->Form->textarea('Voucher.descriptions',array('placeholder' => 'Enter Content','class' => 'form-control','rows'=>5)); ?>
+                                    <?php echo $this->Form->textarea('Voucher.descriptions',array('placeholder' => 'Enter Content','class' => 'form-control','rows'=>15)); ?>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <div class="row">
+                    <!-- <div class="row">
                         <div class="col-md-6">
                             <label for="icon">Logo</label>
                             <div class="remove-section edit-remove-section">
@@ -195,7 +195,8 @@
                                 </div>
                             </div>
                         </div>
-                    </div> 
+                    </div> --> 
+
                     <br>
                     <button type="submit" class="btn btn-primary m-t-15 waves-effect jq_add">Submit</button>
                     <?php echo $this->Form->end(); ?>

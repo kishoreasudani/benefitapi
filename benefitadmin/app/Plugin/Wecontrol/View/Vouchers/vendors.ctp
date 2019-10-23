@@ -4,48 +4,14 @@
             <h2 class="text-uppercase">
 				Vendors
             </h2> 
+
 			<?php   
-			echo $this->Html->link('Add Vendors','javascript:void(0)',array('class' => 'btn bg-orange waves-effect pull-right btn-right-position','id'=>'addvendorformbutton','escape'=>false)) ; 
+			
+			  echo $this->Html->link('Add Vendor',array('controller'=>'vouchers','action'=>'add_vendor'),array('class' => 'btn bg-orange waves-effect pull-right btn-right-position','escape'=>false)) ; 
             ?>          
         </div>   
         <?php echo $this->element('flash_message'); ?>  	
 	   	<div class="row">
-
-	   		<div class="col-sm-12" id="addvendorformdata" style="display: none;">
-                <div class="row clearfix">
-			        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-			            <div class="card">
-			                <div class="header">
-			                    <h2>
-			                        Add Vendor
-			                    </h2>
-			                </div>
-			                <div class="body">
-			                    <?php echo $this->Form->create('Vendor',array('url' => 'javascript:void(0)' , 'novalidate' => true,'id' => 'VendorAddForm', 'enctype' => "multipart/form-data")) ;?>                        
-			                    <div class="row">
-			                        <div class="col-md-6">
-			                            <label for="email_address">Vendor Name<span class="red_star">*</span></label>
-			                            <div class="form-group">
-			                                <div class="form-line">
-			                                    <?php echo $this->Form->text('Vendor.name',array('placeholder' => 'Enter vendor Name','class' => 'form-control')); ?>
-			                                    	
-			                                  </div>
-			                            </div>
-			                        </div>
-			                        <div class="col-md-6">
-			                            
-			                            <div class="form-group">
-			                                <button type="submit" class="btn btn-primary m-t-15 waves-effect align-center jq_add_vendor">Submit</button>
-			                            </div>
-			                        </div>
-			                    </div>
-			               <?php echo $this->Form->end(); ?>
-			           </div>
-			           </div>
-                    </div>
-                 </div>
-	   		</div>
-
 	   		<div class="col-sm-12">
 	   			<div class="card no-margin-b">
 		   			<div class="header">
@@ -140,55 +106,7 @@ $(document).ready(function(){
 		return url = adminUrl+'vouchers/vendors';	
 		
 	}
-
-
-	$("#addvendorformbutton").click(function () {
-        $("#addvendorformdata").toggle()
-   });
-
-	/* add vendor */
-
-	$(".jq_add_vendor").click( function() {
-
-        $("#loading_image").show();
-        $('.err-remove-validate').remove();
-        $('.form-line').removeClass('error');
-        $('.form-line').removeClass('focused');
-        var ajaxOptions = {
-        url         : adminUrl+'vouchers/add_vendor/',
-        resetForm   : false,
-        dataType    : 'json',
-        success     : ajaxSuccess
-        };
-        $( '#VendorAddForm' ).ajaxForm( ajaxOptions );
-        $( '#VendorAddForm' ).on('submit',function() {
-        $("#loading_image").show();
-        });
-        function ajaxSuccess( data , responseCode , xhr ) {  
-
-  
-        if(data.success == false){
-            var errors  = data.message;
-            $.each( data.message, function( key, value ) {
-                $('<label class="error err-remove-validate">'+value+'</label>').insertAfter($('#'+key).parents('.form-line'));
-                $('#'+key).parents('.form-line').addClass('error');
-                $('#'+key).parents('.form-line').addClass('focused'); 
-            });
-
-              $("#loading_image").hide();
-            }else if(data.success == true){
-               $(".success_box").show();
-               $(".success_msg").html(data.message);
-               $("#addvendorformdata").toggle()
-               $("#VendorAddForm").trigger("reset");
-             	var url = adminUrl+'vouchers/vendors_data';
-	            loadPiece(url,'#empdata');
-               $("#loading_image").hide();
-            //setTimeout(function(){ window.location.href = adminUrl+'vouchers'; }, 500);      
-        } 
-        }
-    });
-
+	
 
 });
 </script>

@@ -28,6 +28,7 @@
                     </h2>
                 </div>
 
+
                     <div class="body">
                                 <?php echo $this->Form->create('Vendor',array('url' => 'javascript:void(0)' , 'novalidate' => true,'id' => 'VendorAddForm', 'enctype' => "multipart/form-data")) ;?>                        
                                 <div class="row">
@@ -36,6 +37,87 @@
                                         <div class="form-group">
                                             <div class="form-line">
                                                 <?php echo $this->Form->text('Vendor.name',array('placeholder' => 'Enter vendor Name','class' => 'form-control')); ?>
+                                                    
+                                              </div>
+                                        </div>
+                                    </div>
+
+                                     <div class="col-md-6">
+                                        <label for="email_address">Vendor URL<span class="red_star"></span></label>
+                                        <div class="form-group">
+                                            <div class="form-line">
+                                                <?php echo $this->Form->text('Vendor.vendor_url',array('placeholder' => 'Enter vendor URL','class' => 'form-control')); ?>
+                                                    
+                                              </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+
+
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <label for="email_address">Vendor Logo<span class="red_star">*</span></label>
+                                        <div class="remove-section edit-remove-section">
+                                          <div class="remove-image-1 edit-common-img margin_bottom5">
+                                              <?php $imagepath = Configure::read('SiteSettings.Absolute.VendorLogo').$logo;  ?>  
+                                              <span class="jq_remove_image "></span>                              
+                                              <?php echo $this->Html->image($imagepath,array('width'=>'100%;'));?>
+                                          </div>
+                                          <div class="rows fileUpload btn btn-primary">
+                                              <span class="rows upload_button pull-left">Upload logo</span>
+                                              <?php echo $this->Form->file('Vendor.logo', array('class'=>'upload jq_file_upload','id'=>'58')); ?>
+                                          </div>
+                                        <div class="form-group">
+                                          <div class="form-line">
+                                             <div id="VendorLogo"> </div>
+                                         </div>
+                                         </div>
+                                      </div> 
+                                    </div>
+
+                                    <div class="col-md-6">
+                                        <label for="email_address">Vendor background logo<span class="red_star">*</span></label>
+                                        <div class="remove-section edit-remove-section">
+                                          <div class="remove-image-1 edit-common-img margin_bottom5">
+                                              <?php $imagepath = Configure::read('SiteSettings.Absolute.VendorLogo').$backlogo;  ?>  
+                                              <span class="jq_remove_image "></span>                              
+                                              <?php echo $this->Html->image($imagepath,array('width'=>'100%;'));?>
+                                          </div>
+                                          <div class="rows fileUpload btn btn-primary">
+                                              <span class="rows upload_button pull-left">Upload background logo</span>
+                                              <?php echo $this->Form->file('Vendor.background_logo', array('class'=>'upload jq_file_upload','id'=>'58')); ?>
+                                          </div>
+                                        <div class="form-group">
+                                          <div class="form-line">
+                                             <div id="VendorLogo"> </div>
+                                         </div>
+                                         </div>
+                                      </div> 
+                                    </div>
+
+                                    
+                                </div>
+
+
+
+                                <div class="row m-t-15">
+
+                                   <div class="col-md-6">
+                                        <label for="email_address">Vendor description<span class="red_star"></span></label>
+                                        <div class="form-group">
+                                            <div class="form-line">
+                                                  <?php echo $this->Form->textarea('Vendor.description',array('placeholder' => 'Enter Description','class' => 'form-control','rows'=>1)); ?>
+                                                    
+                                              </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-6">
+                                        <label for="email_address">Vendor Tags<span class="red_star"></span></label>
+                                        <div class="form-group">
+                                            <div class="form-line">
+                                                <?php echo $this->Form->text('Vendor.tags',array('placeholder' => 'Enter tags','class' => 'form-control')); ?>
                                                     
                                               </div>
                                         </div>
@@ -53,6 +135,8 @@
 
                            <?php echo $this->Form->end(); ?>
                        </div>
+
+                    
                
             </div>
         </div>

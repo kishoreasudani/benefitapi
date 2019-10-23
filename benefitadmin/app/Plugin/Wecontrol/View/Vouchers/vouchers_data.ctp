@@ -11,8 +11,8 @@
                       <th  class="sortLink" width="15%"><?php echo $this->Paginator->sort('Voucher.code','Code'); ?></th> 
                       <th  class="sortLink" width="15%">Redeemptions</th>
                       <th class="sortLink" width="15%" style="text-align:center;"><?php echo $this->Paginator->sort('Voucher.status','Status'); ?></th>
-                      <th class="sortLink" width="15%" style="text-align:center;"><?php echo $this->Paginator->sort('Voucher.created','Created'); ?></th>
-                      <th class="sortLink" width="15%" style="text-align:center;"><?php echo $this->Paginator->sort('Voucher.modified','Modified'); ?></th>                      
+                      <th class="sortLink" width="15%" style="text-align:center;"><?php echo $this->Paginator->sort('Voucher.start_date','Start Date'); ?></th>
+                      <th class="sortLink" width="15%" style="text-align:center;"><?php echo $this->Paginator->sort('Voucher.end_date','End Date'); ?></th>                      
                       <th style="text-align:center;" width="15%">Action</th>
                     </tr>
                 </thead>
@@ -28,8 +28,11 @@
                       <td><?php echo ucwords($value['Voucher']['code']); ?> </td>
                       <td><?php echo $value['Voucher']['count'] ?> </td>
                       <td><?php echo $this->Form->select('Voucher.status',Configure::read('General.status'),array('default' => $value['Voucher']['status'],'class'=>'form-control show-tick change_status','label'=>false,'empty' => false,'id' => base64_encode( $value['Voucher']['id'] )));?></td> 
-                      <td align="center"><?php   echo date(dateFormat,strtotime($value['Voucher']['created'])); ?> </td>
-                      <td align="center"><?php   echo date(dateFormat,strtotime($value['Voucher']['modified'])); ?> </td> 
+                      <td align="center"><?php   echo date(dateFormat,strtotime($value['Voucher']['start_date'])); ?> </td>
+                      <td align="center"><?php   echo date(dateFormat,strtotime($value['Voucher']['end_date']));  if( time() > strtotime($value['Voucher']['end_date'])){  ?>
+                       <span style="color: red"> Expired</span>
+                        <?php } ?>
+                       </td> 
                       <td align="center">         
                         <?php 
                         echo $this->Html->link('<i class="material-icons">remove_red_eye</i>',array('controller'=>'vouchers','action'=>'view_voucher',base64_encode($value['Voucher']['id'])),array('class' => 'btn bg-grey waves-effect btn-xs','escape'=>false,'title'=>'View Voucher')) ; 

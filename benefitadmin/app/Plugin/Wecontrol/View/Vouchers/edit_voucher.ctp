@@ -161,65 +161,12 @@
                             <label for="email_address">Description</label>
                             <div class="form-group">
                                 <div class="form-line">
-                                    <?php echo $this->Form->textarea('Voucher.descriptions',array('placeholder' => 'Enter Content','class' => 'form-control','rows'=>5)); ?>
+                                    <?php echo $this->Form->textarea('Voucher.descriptions',array('placeholder' => 'Enter Content','class' => 'form-control','rows'=>15)); ?>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <div class="row">
-                        <div class="col-md-6">
-                            <label for="icon">Logo</label>
-                            <div class="remove-section edit-remove-section">
-                                <?php   if(isset($this->data['Voucher']['image']) && !empty($this->data['Voucher']['image'])){?>
-                                    <div class="remove-image-1 edit-common-img margin_bottom5">
-                                        <?php $fileName = $this->data['Voucher']['image'];
-                                        $imagepath = Configure::read('SiteSettings.Relative.VoucherImage').'/'.$fileName;
-                                        if(!is_dir($imagepath) && file_exists( $imagepath)){
-                                        $imagepath = Configure::read('SiteSettings.Absolute.VoucherImage').'/'.$fileName;
-                                        } ?>  
-                                        <span class="jq_remove_image "></span>                              
-                                        <?php echo $this->Html->image($imagepath,array('width'=>'100%;'));?>
-                                    </div>
-                                <?php } else {?>
-                                    <div class="remove-image-1 edit-common-img margin_bottom5">
-                                        <?php $imagepath = "wecontrol/user.png";?>  
-                                        <span class="jq_remove_image "></span>                              
-                                        <?php echo $this->Html->image($imagepath,array('width'=>'100%;'));?>
-                                    </div>
-                                <?php } ?>
-                                <div class="rows fileUpload btn btn-primary">
-                                    <span class="rows upload_button pull-left">Image</span>
-                                    <?php echo $this->Form->file('Voucher.image1', array('class'=>'upload jq_file_upload')); ?>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <label for="icon">Background Image</label>
-                            <div class="remove-section edit-remove-section">
-                                <?php   if(isset($this->data['Voucher']['bg_image']) && !empty($this->data['Voucher']['bg_image'])){?>
-                                    <div class="remove-image-1 edit-common-img margin_bottom5">
-                                        <?php $fileName_bg = $this->data['Voucher']['bg_image'];
-                                        $imagepath_bg = Configure::read('SiteSettings.Relative.VoucherImage').'/'.$fileName_bg;
-                                        if(!is_dir($imagepath_bg) && file_exists( $imagepath_bg)){
-                                        $imagepath_bg = Configure::read('SiteSettings.Absolute.VoucherImage').'/'.$fileName_bg;
-                                        } ?>  
-                                        <span class="jq_remove_image "></span>                              
-                                        <?php echo $this->Html->image($imagepath_bg,array('width'=>'100%;'));?>
-                                    </div>
-                                <?php } else {?>
-                                    <div class="remove-image-1 edit-common-img margin_bottom5">
-                                        <?php $imagepath = "wecontrol/user.png";?>  
-                                        <span class="jq_remove_image "></span>                              
-                                        <?php echo $this->Html->image($imagepath,array('width'=>'100%;'));?>
-                                    </div>
-                                <?php } ?>
-                                <div class="rows fileUpload btn btn-primary">
-                                    <span class="rows upload_button pull-left">Image</span>
-                                    <?php echo $this->Form->file('Voucher.image_bg', array('class'=>'upload jq_file_upload')); ?>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                  
                     <br>
                     <button type="submit" class="btn btn-primary m-t-15 waves-effect jq_voucher_edit">Submit</button>
                     <?php echo $this->Form->end(); ?>

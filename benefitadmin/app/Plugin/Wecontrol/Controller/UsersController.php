@@ -113,7 +113,7 @@ class UsersController extends WecontrolAppController {
 			$conditions = "";
 		}	
 	  
-		$this->Paginator->settings = array('order' => 'User.id asc','limit' => Configure::read('AdminListingLimit'));
+		$this->Paginator->settings = array('order' => 'User.id desc','limit' => Configure::read('AdminListingLimit'));
 		$listingData = $this->paginate('User',$conditions);
 		$userVoucherList = array();
 		$userVoucherList = $listingData;
