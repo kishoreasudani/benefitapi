@@ -60,7 +60,7 @@ CREATE TABLE `admins` (
   KEY `email` (`email`),
   KEY `password` (`password`),
   KEY `status` (`status`)
-) ENGINE=InnoDB AUTO_INCREMENT=238 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=307 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 /*Table structure for table `articles` */
 
@@ -144,7 +144,7 @@ CREATE TABLE `cities` (
   `modified` datetime DEFAULT NULL,
   `modified_by` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=2712 DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 /*Table structure for table `coin_history` */
 
@@ -159,7 +159,7 @@ CREATE TABLE `coin_history` (
   `reference_type` enum('voucher','other') DEFAULT 'other',
   `created` datetime DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=295 DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM AUTO_INCREMENT=147 DEFAULT CHARSET=latin1;
 
 /*Table structure for table `coins` */
 
@@ -173,7 +173,7 @@ CREATE TABLE `coins` (
   `created` datetime DEFAULT NULL,
   `modified` datetime DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=91 DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM AUTO_INCREMENT=15 DEFAULT CHARSET=latin1;
 
 /*Table structure for table `countries` */
 
@@ -277,7 +277,7 @@ CREATE TABLE `push_notifications` (
   `created` datetime DEFAULT NULL,
   `modified` datetime DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=73 DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 /*Table structure for table `role_permissions` */
 
@@ -395,7 +395,7 @@ CREATE TABLE `user_devices` (
   `device_token` varchar(255) NOT NULL DEFAULT '',
   `created` datetime DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=575 DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM AUTO_INCREMENT=99 DEFAULT CHARSET=latin1;
 
 /*Table structure for table `user_login_logs` */
 
@@ -407,7 +407,7 @@ CREATE TABLE `user_login_logs` (
   `ip_address` varchar(255) DEFAULT '',
   `created` datetime DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=760 DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM AUTO_INCREMENT=884 DEFAULT CHARSET=latin1;
 
 /*Table structure for table `user_notifications` */
 
@@ -424,7 +424,7 @@ CREATE TABLE `user_notifications` (
   `created` datetime DEFAULT NULL,
   `modified` datetime DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=354 DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM AUTO_INCREMENT=218 DEFAULT CHARSET=latin1;
 
 /*Table structure for table `user_orders` */
 
@@ -437,7 +437,7 @@ CREATE TABLE `user_orders` (
   `created` datetime DEFAULT NULL,
   `reference_type` enum('other','voucher') DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=95 DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM AUTO_INCREMENT=51 DEFAULT CHARSET=latin1;
 
 /*Table structure for table `user_otps` */
 
@@ -452,7 +452,7 @@ CREATE TABLE `user_otps` (
   `mobile` varchar(15) DEFAULT NULL,
   `email` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=60 DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 /*Table structure for table `user_passwords` */
 
@@ -488,7 +488,7 @@ CREATE TABLE `user_steps` (
   `steps` int(11) NOT NULL,
   `created` datetime NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=698 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=97 DEFAULT CHARSET=latin1;
 
 /*Table structure for table `users` */
 
@@ -525,7 +525,25 @@ CREATE TABLE `users` (
   `modified` datetime DEFAULT NULL,
   `modified_by` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=147 DEFAULT CHARSET=latin1 CHECKSUM=1 DELAY_KEY_WRITE=1 ROW_FORMAT=DYNAMIC;
+) ENGINE=MyISAM AUTO_INCREMENT=164 DEFAULT CHARSET=latin1 CHECKSUM=1 DELAY_KEY_WRITE=1 ROW_FORMAT=DYNAMIC;
+
+/*Table structure for table `vendors` */
+
+DROP TABLE IF EXISTS `vendors`;
+
+CREATE TABLE `vendors` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `vendor_url` varchar(255) NOT NULL,
+  `logo` varchar(254) NOT NULL,
+  `background_logo` varchar(254) NOT NULL,
+  `tags` varchar(254) NOT NULL,
+  `description` text NOT NULL,
+  `name` varchar(254) NOT NULL,
+  `status` enum('active','inactive') NOT NULL DEFAULT 'active',
+  `created` datetime NOT NULL,
+  `modified` datetime NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=53 DEFAULT CHARSET=latin1;
 
 /*Table structure for table `vouchers` */
 
@@ -533,6 +551,7 @@ DROP TABLE IF EXISTS `vouchers`;
 
 CREATE TABLE `vouchers` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
+  `vendor_id` int(11) NOT NULL,
   `name` varchar(255) DEFAULT NULL,
   `code` varchar(255) DEFAULT NULL,
   `coins_required` int(11) DEFAULT NULL,
@@ -540,7 +559,6 @@ CREATE TABLE `vouchers` (
   `amount` decimal(10,0) DEFAULT NULL,
   `max_discount` decimal(10,0) DEFAULT NULL,
   `min_purchase` decimal(10,0) DEFAULT NULL,
-  `image` varchar(255) DEFAULT NULL,
   `start_date` datetime DEFAULT NULL,
   `end_date` datetime DEFAULT NULL,
   `status` enum('active','deleted','expired','inactive') DEFAULT NULL,
@@ -550,9 +568,10 @@ CREATE TABLE `vouchers` (
   `modified` datetime DEFAULT NULL,
   `descriptions` longtext,
   `terms_and_conditions` longtext,
-  `bg_image` varchar(256) CHARACTER SET utf8 DEFAULT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=82 DEFAULT CHARSET=latin1;
+  PRIMARY KEY (`id`),
+  KEY `vendor_id` (`vendor_id`),
+  CONSTRAINT `vouchers_ibfk_1` FOREIGN KEY (`vendor_id`) REFERENCES `vendors` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION
+) ENGINE=InnoDB AUTO_INCREMENT=81 DEFAULT CHARSET=latin1;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
 /*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
