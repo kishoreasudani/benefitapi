@@ -68,7 +68,7 @@ register = (userParam) => {
 
         if (userParam.fb_token != "") {
             userParam.password = "";
-            userService.getByEmail(userParam.email).then(response => {
+            userService.getByFbToken(userParam.fb_token).then(response => {
                 if (response != null && response.length > 0) {
                     userParam.user_id = response[0].id;
 

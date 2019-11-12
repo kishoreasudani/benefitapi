@@ -3,9 +3,10 @@ class Vendor extends AppModel {
 	var $name 			= 'Vendor';
 	var $useTable 		= 'vendors';
 	var $actsAs 		= array('Multivalidatable');
+	
 	var $validationSets = array(
-		/*add Category*/
 
+		/*add Category*/
 		'add' => array(
 			'name' => array(
 					'notEmpty' => array(
@@ -18,8 +19,6 @@ class Vendor extends AppModel {
 					),
 					
 			),
-
-		
 			'logo' => array(
 		            'rule1'=>array(
 		            'rule' => array('extension',array('jpeg','jpg','png','gif')),
@@ -51,11 +50,18 @@ class Vendor extends AppModel {
 		        'on' => 'update',
 		       ),
 		    ),
+		    'description' => array(
+					'notEmpty' => array(
+						'rule'	=> 'notEmpty',
+						'message'=>	'Please enter voucher description.'
+					)
+								
+			),
 
 		),
 
 
-				/*Edit category*/
+	   /*Edit category*/
 		'edit' => array(			
 			'name' 	=> array(
 					'notEmpty'	=>	array(
@@ -67,9 +73,12 @@ class Vendor extends AppModel {
 						'message'=>	'Name is already exists.'
 					),
 			),
-
-		
-
+			 'description' => array(
+					'notEmpty' => array(
+						'rule'	=> 'notEmpty',
+						'message'=>	'Please enter voucher description.'
+					)				
+			),
 		)
 	
 			

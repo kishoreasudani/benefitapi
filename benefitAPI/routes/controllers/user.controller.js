@@ -55,6 +55,8 @@ sendOTP = async (req, reply) => {
                     mobile: data.mobile,
                     email: data.email,
                     otp: otp,
+                    otp_type: req.body.otp_type,
+   
                 }
 
                 //Generate otp
@@ -80,7 +82,12 @@ verifyOTP = async (req, reply) => {
     } if (!utils.validateNumericField(req.body.otp)) {
         utils.sendErrorResponse(message.user_validation.statusCode, message.user_validation.otp, reply);
     } else {
-        otpService.verifyOTP(req.body).then(response => {
+             var postData = {
+                    mobile: req.body.mobile,
+                    otp: req.body.otp,
+                    otp_type: req.body.otp_type
+                }
+        otpService.verifyOTP(postData).then(response => {
             if (response && response.length > 0) {
                 var data = response[0];
                 utils.sendSuccessResponse(1, data, reply);

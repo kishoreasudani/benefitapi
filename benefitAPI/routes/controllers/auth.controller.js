@@ -70,7 +70,7 @@ login = async (req, reply) => {
 }
 
 register = (req, reply) => {
-    if (!utils.validateField(req.body.email)) {
+    if (req.body.fb_token=="" && !utils.validateField(req.body.email)) {
         utils.sendErrorResponse(message.user_validation.statusCode, message.user_validation.email, reply);
     } else {
 

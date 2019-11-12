@@ -3,12 +3,20 @@
         <div class="block-header relative rows">
             <h2 class="text-uppercase">
 				Push Notifications
-			<?php   
-			echo $this->Html->link('Send Notification',array('controller'=>'notifications','action'=>'send_notifications'),array('class' => 'btn bg-orange waves-effect pull-right margin-left15','escape'=>false)) ; 
-            ?>
-			<?php   
-			echo $this->Html->link('Add Notification',array('controller'=>'notifications','action'=>'add_notification'),array('class' => 'btn bg-orange waves-effect pull-right ','escape'=>false)) ; 
-            ?>         
+
+				<div class="pull-right">
+				<?php   
+				echo $this->Html->link('Send Notification',array('controller'=>'notifications','action'=>'send_notifications'),array('class' => 'btn bg-orange waves-effect pull-right margin-left15','escape'=>false)) ; 
+	            ?>
+				<?php   
+				echo $this->Html->link('Add Notification',array('controller'=>'notifications','action'=>'add_notification'),array('class' => 'btn bg-orange waves-effect pull-right ','escape'=>false)) ; 
+	            ?> 
+	             <button type="button" class="btn btn-danger margin-right15 pull-right deleteMultiple" id="deleteMultiple">Delete Multiple</button> 
+
+	    		<div style="color: red;display: none; text-align: left; text-transform: none;
+			    padding-top: 6px;clear: both;font-size: 13px;" id="displaySelectedError">Please select at least one data for delete </div>   
+			</div>
+
             </h2>  
         </div>   
         <?php echo $this->element('flash_message'); ?>  	
@@ -119,6 +127,87 @@ $(document).ready(function(){
 		return url = adminUrl+'notifications/notification_data';	
 		
 	}
+
+
+
+	  /* multiple delete */
+
+      $('body').on('click', '#selectall', function(e) {
+           $("input:checkbox[class=select_delete_data]").prop('checked',this.checked);
+       });
+
+     // if all checkbox are selected, check the selectall checkbox
+
+     $('body').on('click', '.select_delete_data', function(e) {
+
+        if($(".select_delete_data").length == $(".select_delete_data:checked").length) {
+          
+              $("#selectall").prop('checked',this.checked);
+          } else {
+            $("#selectall").prop('checked', false);
+          }
+      });
+
+
+     $(".deleteMultiple").click(function(){
+	     	$("#displaySelectedError").hide();  
+			var selectedData = [];
+			$. each($("input:checkbox[class=select_delete_data]:checked"), function(){
+			   selectedData. push($(this). val());
+			});
+
+			if(selectedData!='' && selectedData.length>0 ){
+				  bootbox.confirm({
+				      message: " Are you sure, you want to delete these data?",
+				       buttons: {
+				        confirm: {
+				            label: 'Yes',
+				            className: 'btn-success'
+				        },
+				        cancel: {
+				            label: 'No',
+				            className: 'btn-danger'
+				        }
+				      },
+				      callback: function(result) {  
+				        if(result == true) {
+				            $("#loading_image").show();
+				            $.ajax({
+				                type: "POST",
+				                async: true,
+				                url: adminUrl+'notifications/delete_multiple_notification',
+				                dataType: 'json',
+				                data: {deleteData:selectedData},
+				                error:function(a,b,c) {
+				                    $("#loading_image").hide();
+				                },
+				                success: function (data) {
+				                    $('.alert-success').hide();
+				                    $('.alert-danger').hide();
+				                    if(data.success == true) {
+				                         $(".success_box").show();
+				                         $(".success_msg").html(data.msg);
+				                        var url = adminUrl+'notifications';
+				                         location.href=url;
+				                         // loadPiece(url,'#empdata'); 
+
+				                    }else{
+				                        $('.error_box').show(); 
+				                        $('.error_msg').html(data.msg);
+				                        var url = adminUrl+'notifications';
+				                        //loadPiece(url,'#empdata'); 
+
+				                         location.href=url;
+				                    }
+				                }
+				            });
+				        }
+				      },className: "bootbox-m"
+				    });
+			}else{
+	            $("#displaySelectedError").show();  
+			}	   
+     });
 
 });
 </script>

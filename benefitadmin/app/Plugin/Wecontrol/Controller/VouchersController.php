@@ -7,7 +7,7 @@ class VouchersController extends WecontrolAppController {
 
 	function beforeFilter(){
 		parent::beforeFilter();
-		$this->Auth->allow('index', 'vouchers_data', 'add_voucher', 'edit_voucher', 'view_voucher', 'delete_voucher','vendors','vendors_data','delete_vendors','add_vendor','edit_vendor','add_bulk_voucher');			
+		$this->Auth->allow('change_order', 'index', 'vouchers_data', 'add_voucher', 'edit_voucher', 'view_voucher', 'delete_voucher','vendors','vendors_data','delete_vendors','add_vendor','edit_vendor','add_bulk_voucher','delete_multiple_vendors','delete_multiple_vouchers');			
 	}
 
 
@@ -39,7 +39,7 @@ class VouchersController extends WecontrolAppController {
 		}else{
 			$conditions = "";
 		}	
-		$this->Paginator->settings = array('order' => 'Vendor.name asc','limit' => Configure::read('AdminListingLimit'));
+		$this->Paginator->settings = array('order' => 'Vendor.display_order asc','limit' => Configure::read('AdminListingLimit'));
 		$listingData = $this->paginate('Vendor',$conditions);
 		$userVoucherList = array();
 		$userVoucherList = $listingData;
@@ -50,6 +50,21 @@ class VouchersController extends WecontrolAppController {
 
 	}
 
+	public function change_order(){
+		$this->layout = false;
+		$data = json_decode($this->data['Vendor']['serializedData'] , false );
+		if(isset($data)){
+			if(!empty($data)){
+			 foreach($data as $key => $ids){
+			  $this->Vendor->updateAll(
+			   array('Vendor.display_order' => $key),
+			   array('Vendor.id' => $ids->id)
+			  );
+			 }
+			}
+		}
+		$this->autoRender = false;
+	}
 
 	public function add_vendor( ) {
 		$this->_is_user_login (); 
@@ -199,8 +214,6 @@ class VouchersController extends WecontrolAppController {
 		}	
 		$this->set('logo',$logo);
 		$this->set('backlogo',$backlogo);
-
-
     }
 
 
@@ -301,6 +314,27 @@ class VouchersController extends WecontrolAppController {
     }
 
 
+    public function delete_multiple_vouchers(){
+		$this->layout = false;
+		if($this->request->is('ajax')) {	
+		       $vendorData = 	$this->request->data['deleteData'];
+				$response = array();
+				if(!empty($vendorData)) {
+					foreach ($vendorData as $key => $value) {
+						$this->Voucher->deleteAll(array('Voucher.id' => $value), false);
+					}
+					$response = array('success' => true,'msg' => 'Vouchers has been deleted successfully.');
+				} else {
+					$response = array('success' => false,'msg' => 'Oops error please try again.');
+				}
+			echo json_encode($response);
+            die;
+		} else {
+			$this->redirect('/');
+		}
+    }
+
+
     public function delete_vendors($id = null){
 		$this->layout = false;
 		if($this->request->is('ajax')) {		
@@ -317,6 +351,30 @@ class VouchersController extends WecontrolAppController {
 			$this->redirect('/');
 		}
     }
+
+    public function delete_multiple_vendors(){
+		$this->layout = false;
+		if($this->request->is('ajax')) {	
+
+		       $vendorData = 	$this->request->data['deleteData'];
+				$response = array();
+				if(!empty($vendorData)) {
+					foreach ($vendorData as $key => $value) {
+						$this->Vendor->deleteAll(array('Vendor.id' => $value), false);
+					}
+					$response = array('success' => true,'msg' => 'Vendors has been deleted successfully.');
+				} else {
+					$response = array('success' => false,'msg' => 'Oops error please try again.');
+				}
+			echo json_encode($response);
+            die;
+		} else {
+			$this->redirect('/');
+		}
+    }
+
+
+
   
     public function add_voucher($vendor_id=null) {
 		$this->_is_user_login (); 
@@ -434,9 +492,9 @@ class VouchersController extends WecontrolAppController {
 									$amount = trim($data[2]);
 									$coinsRequired =   trim($data[3]);
 									$startDate =   trim($data[4]);	
-									$etartDate =   trim($data[4]);	
-									$tc =   trim($data[4]);	
-									$description =   trim($data[4]);	
+									$etartDate =   trim($data[5]);	
+									//$tc =   trim($data[6]);	
+									//$description =   trim($data[7]);	
 
 									if($voucherName !='' && $code!='' && $coinsRequired!='' &&  $startDate!='' && $etartDate!=''){
                                         $voucheData['Voucher']['vendor_id'] = $vendor_id;
@@ -444,8 +502,8 @@ class VouchersController extends WecontrolAppController {
                                         $voucheData['Voucher']['code'] = $code;
                                         $voucheData['Voucher']['coins_required'] = $coinsRequired;
                                         $voucheData['Voucher']['amount'] = $amount;
-                                        $voucheData['Voucher']['descriptions'] = $description;
-                                        $voucheData['Voucher']['terms_and_conditions'] = $tc;
+                                       // $voucheData['Voucher']['descriptions'] = $description;
+                                       // $voucheData['Voucher']['terms_and_conditions'] = $tc;
 										$voucheData['Voucher']['status'] = 'active';
 										$voucheData['Voucher']['created_by'] = $this->Session->read('Auth.Admin.id');
 										$voucheData['Voucher']['start_date'] = date('Y-m-d H:i',strtotime($startDate));

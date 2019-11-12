@@ -4,9 +4,7 @@
             <h2 class="text-uppercase">
 				Vendors
             </h2> 
-
 			<?php   
-			
 			  echo $this->Html->link('Add Vendor',array('controller'=>'vouchers','action'=>'add_vendor'),array('class' => 'btn bg-orange waves-effect pull-right btn-right-position','escape'=>false)) ; 
             ?>          
         </div>   
@@ -31,9 +29,14 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-sm-3 m-t-10">
+                                <div class="col-sm-7 m-t-10">
                                     <button type="button" class="btn bg-green waves-effect" id="search_button">Search</button>
-                                    <button type="button" class="btn btn-primary waves-effect reset_data">Reset</button>                                    
+
+                                    <button type="button" class="btn btn-primary waves-effect reset_data">Reset</button>   
+
+                                    <button type="button" class="btn btn-danger waves-effect deleteMultiple" id="deleteMultiple">Delete Multiple</button> 
+
+                                    <span style="color: red;display: none;" id="displaySelectedError">Please select at least one data for delete </span>
                                 </div>
                             <?php echo $this->Form->end(); ?>
                         </div>
@@ -81,6 +84,7 @@ $(document).ready(function(){
 
 
 	$(".reset_data").click(function(){
+
 		$( '#serachForm' ).each(function(){
 			this.reset();
 		});
@@ -102,10 +106,90 @@ $(document).ready(function(){
 	});
 
 	function switchViewUrl(){
-	
-		return url = adminUrl+'vouchers/vendors';	
-		
+		return url = adminUrl+'vouchers/vendors';		
 	}
+
+
+   /* multiple delete */
+
+       $('body').on('click', '#selectall', function(e) {
+       	
+           $("input:checkbox[class=select_delete_data]").prop('checked',this.checked);
+       });
+
+     // if all ceckbox are selected, check the selectall checkbox
+
+     $('body').on('click', '.select_delete_data', function(e) {
+
+        if($(".select_delete_data").length == $(".select_delete_data:checked").length) {
+          
+              $("#selectall").prop('checked',this.checked);
+          } else {
+            $("#selectall").prop('checked', false);
+          }
+      });
+
+
+     $(".deleteMultiple").click(function(){
+	     	$("#displaySelectedError").hide();  
+			var selectedData = [];
+			$. each($("input:checkbox[class=select_delete_data]:checked"), function(){
+			   selectedData. push($(this). val());
+			});
+
+			if(selectedData!='' && selectedData.length>0 ){
+				  bootbox.confirm({
+				      message: " Are you sure, you want to delete these data?",
+				       buttons: {
+				        confirm: {
+				            label: 'Yes',
+				            className: 'btn-success'
+				        },
+				        cancel: {
+				            label: 'No',
+				            className: 'btn-danger'
+				        }
+				      },
+				      callback: function(result) {  
+				        if(result == true) {
+				            $("#loading_image").show();
+				            $.ajax({
+				                type: "POST",
+				                async: true,
+				                url: adminUrl+'vouchers/delete_multiple_vendors',
+				                dataType: 'json',
+				                data: {deleteData:selectedData},
+				                error:function(a,b,c) {
+				                    $("#loading_image").hide();
+				                },
+				                success: function (data) {
+				                    $('.alert-success').hide();
+				                    $('.alert-danger').hide();
+				                    if(data.success == true) {
+				                         $(".success_box").show();
+				                         $(".success_msg").html(data.msg);
+				                        var url = adminUrl+'vouchers/vendors/';
+				                         location.href=url;
+				                         // loadPiece(url,'#empdata'); 
+
+				                    }else{
+				                        $('.error_box').show(); 
+				                        $('.error_msg').html(data.msg);
+				                        var url = adminUrl+'vouchers/vendors/';
+				                        //loadPiece(url,'#empdata'); 
+
+				                         location.href=url;
+				                    }
+				                }
+				            });
+				        }
+				      },className: "bootbox-m"
+				    });
+			}else{
+	            $("#displaySelectedError").show();  
+			}	   
+     });
+
 	
 
 });

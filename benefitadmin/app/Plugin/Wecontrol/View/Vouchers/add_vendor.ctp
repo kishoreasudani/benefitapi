@@ -1,7 +1,11 @@
+ <?php
+   echo $this->Html->script('ckeditor/ckeditor.js');
+   echo $this->Html->script('ckeditor/adapters/jquery.js');
+?>
 <section class="content">  
   <ol class="breadcrumb breadcrumb-col-teal">
       <li><?php  echo $this->Html->link('<i class="material-icons">home</i> Home',array('controller'=>'dashboard','action'=>'index'),array('escape'=>false)) ; ?></li>
-      <li><?php  echo $this->Html->link('<i class="material-icons">groups</i> Vendors',array('controller'=>'vouchers','action'=>'venders'),array('escape'=>false)) ; ?></li>        
+      <li><?php  echo $this->Html->link('<i class="material-icons">groups</i> Vendors',array('controller'=>'vouchers','action'=>'vendors'),array('escape'=>false)) ; ?></li>        
       <li class="active"><i class="material-icons"></i>Add Vendor</li>
   </ol>
     
@@ -100,21 +104,33 @@
                                      
                                 </div>
 
+                                <div  class="row m-t-15">
+                                    <div class="col-md-12">
+                                        <label for="email_address">Vouchers T&C</label>
+                                        <div class="form-group">
+                                            <div class="form-line">
+                                                <?php echo $this->Form->textarea('Vendor.terms_and_conditions',array('placeholder' => 'Enter Content','class' => 'form-control t_and_c','rows'=>5)); ?>
+                                            </div>
+                                        </div>
+                                    </div>
+                                   
+                                </div>
+
+                                 <div  class="row m-t-15">
+                                    <div class="col-md-12">
+                                        <label for="email_address">Vouchers Description<span class="red_star">*</span></label>
+                                        <div class="form-group">
+                                            <div class="form-line">
+                                                <?php echo $this->Form->textarea('Vendor.description',array('placeholder' => 'Enter Content','class' => 'form-control','rows'=>5,'id'=>'desp')); ?>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
 
 
                                 <div class="row m-t-15">
-                                  <div class="col-md-6">
-                                        <label for="email_address">Vendor description<span class="red_star"></span></label>
-                                        <div class="form-group">
-                                            <div class="form-line">
-                                                  <?php echo $this->Form->textarea('Vendor.description',array('placeholder' => 'Enter Description','class' => 'form-control','rows'=>1)); ?>
-                                                    
-                                              </div>
-                                        </div>
-                                    </div>
-
-                                    <div class="col-md-6">
-                                        <label for="email_address">Vendor Tags<span class="red_star">*</span></label>
+                                    <div class="col-md-12">
+                                        <label for="email_address">Vendor Tags<span class="red_star"></span></label>
                                         <div class="form-group">
                                             <div class="form-line">
                                                 <?php echo $this->Form->text('Vendor.tags',array('placeholder' => 'Enter tags','class' => 'form-control')); ?>
@@ -123,6 +139,8 @@
                                         </div>
                                     </div>
                                 </div>
+
+
 
                                  <div class="row">
                                     <div class="col-md-6">
@@ -142,7 +160,13 @@
   </div>
 </section>
 <script type="text/javascript">
-    $(document).ready(function(){
+  $(document).ready(function(){
+
+     CKEDITOR.disableAutoInline = true;
+     $( '.t_and_c' ).ckeditor(); // Use CKEDITOR.replace() if element is <textarea>. 
+
+
+  
 
     $(".jq_add_vendor").click( function() {
 
@@ -183,3 +207,10 @@
 });
 
 </script>
+
+<style type="text/css">
+  
+.cke_wysiwyg_frame, .cke_wysiwyg_div{
+    background-color:#FCF1DC !important;
+}
+</style>

@@ -6,7 +6,7 @@
             <table class="table table-bordered table-hover js-basic-example dataTable">
                 <thead>
                     <tr>
-                      <th width="5%" style="text-align:center;">#</th>
+                      <th width="10%" style="text-align:center;">Delete   <input type="checkbox" id="selectall" title="Select All" /></th>
                       <th class="sortLink" width="20%"><?php echo $this->Paginator->sort('UserNotification.message','Message'); ?></th> 
                       <th class="sortLink" width="15%"><?php echo $this->Paginator->sort('UserNotification.sender','Sender'); ?></th> 
                       <th class="sortLink" width="15%"><?php echo $this->Paginator->sort('UserNotification.receiver','Receiver'); ?></th>
@@ -22,7 +22,7 @@
                       foreach ($notification_data as $key => $value) {   
                     ?>
                     <tr>
-                      <td align="center"><?php echo $i++; ?></td>
+                     <td align="center" width="5%"><input type="checkbox" name="selectednoti[]" class="select_delete_data" value="<?php echo $value['UserNotification']['id']; ?>" title="Select Notification"></td>
                       <td><?php echo $value['UserNotification']['message'] ?> </td>
                       <td><?php echo ucwords($value['Admin']['first_name']).' '.ucwords($value['Admin']['last_name']); ?> </td> 
                       <td><?php echo ucwords($value['User']['first_name']).' '.ucwords($value['User']['last_name']); ?></td> 
@@ -140,6 +140,9 @@ $(document).ready(function(){
       },className: "bootbox-m"
     });
   });
+
+
+  
 
 
 });

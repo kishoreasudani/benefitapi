@@ -140,6 +140,22 @@ getByEmail = (email) => {
 }
 
 
+//User by email
+getByFbToken = (fbToken) => {
+    return new Promise(function (resolve, reject) {
+        // mySQl query
+        const sqlQuery = "Select * from users WHERE fb_token='" + fbToken + "'";
+        //Execute query
+        connections.ExecuteSelectQuery(sqlQuery)
+            .then(data => {
+                resolve(data);
+            }).catch(err => {
+                reject(err);
+            });
+    })
+}
+
+
 
 getByEmailorPassword = (userParam) => {
     return new Promise(function (resolve, reject) {
@@ -238,8 +254,8 @@ updateImage = (userParam) => {
 
 createUser = (userParam) => {
     return new Promise(function (resolve, reject) {
-
-        // mySQl query
+ 
+        // mySQl query  city  ,'" + userParam.city_name + "'
         var sqlQuery = "INSERT INTO users(first_name,last_name,password,email,modified,created,status,fb_token,g_token,email_notifications,push_notifications,user_role_type,mobile) "
         sqlQuery = sqlQuery + " VALUES('" + userParam.first_name + "','" + userParam.last_name + "','" + userParam.password + "','" + userParam.email + "',UTC_TIMESTAMP,UTC_TIMESTAMP,'" + enums.enmUserStatus.active + "','" + userParam.fb_token + "','" + userParam.g_token + "','" + enums.enmEmailNotifications.yes + "','" + enums.enmPushNotifications.yes + "','" + enums.enmRoles.user + "','" + userParam.mobile + "')";
 
@@ -320,5 +336,6 @@ module.exports = {
     getSetting,
     getByEmailorPassword,
     getUserProfile,
-    updateNotificationStatus
+    updateNotificationStatus,
+    getByFbToken
 }

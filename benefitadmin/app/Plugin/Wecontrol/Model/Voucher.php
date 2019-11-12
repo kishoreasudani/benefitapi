@@ -31,17 +31,7 @@ class Voucher extends WecontrolAppModel {
 						'message' 	=> 'Code is already in use. Please provide a different code'				
 					)					
 			),
-			'description' => array(
-					'notEmpty' => array(
-						'rule'	=> 'notEmpty',
-						'message'=>	'Please enter description.'
-					),
-					'between' => array(
-						'rule' => array('lengthBetween', 3, 50),
-						'message' => 'Description should be between 3 to 50 characters',
-						'last' => true
-					),				
-			),
+
 			'coins_required' => array(
 					'notEmpty' => array(
 						'rule'	=> 'notEmpty',
@@ -59,10 +49,6 @@ class Voucher extends WecontrolAppModel {
 					),				
 			),
 			'amount' => array(
-					'notEmpty' => array(
-						'rule'	=> 'notEmpty',
-						'message'=>	'Please enter voucher amount.'
-					),
 					'decimal' => array(
 						'rule'	=> 'decimal',
 						'message'=>	'Amount should be numeric.'

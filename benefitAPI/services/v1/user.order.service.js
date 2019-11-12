@@ -21,11 +21,12 @@ getList = (postParams) => {
         let condition = ""
         if (postParams.search_text != "" && postParams.search_text != null) {
             condition = " AND ( name LIKE '%" + postParams.search_text + "%'  OR code LIKE '%" + postParams.search_text
-                + "%' OR description LIKE '%" + postParams.search_text + "%' ) ";
+                + "%' OR vendors.description LIKE '%" + postParams.search_text + "%' ) ";
         }
 
-        let sqlQuery = "Select vouchers.*,user_orders.id AS user_order_id from user_orders "
+        let sqlQuery = "Select vouchers.*,user_orders.id AS user_order_id ,vendors.logo as image, vendors.background_logo as bg_image,vendors.description as descriptions,vendors.terms_and_conditions from user_orders "
         sqlQuery = sqlQuery + " INNER JOIN vouchers on user_orders.reference_id=vouchers.id AND user_orders.reference_type='" + enums.enmReferenceType.voucher + "'"
+          sqlQuery = sqlQuery + " INNER JOIN vendors on vendors.id=vouchers.vendor_id"
         sqlQuery = sqlQuery + " WHERE user_orders.user_id=" + postParams.user_id;
         sqlQuery = sqlQuery + condition + pagingCondition;
 

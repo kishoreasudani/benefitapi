@@ -4,66 +4,71 @@
       <div class="body">
         <div class="table-responsive">
             <table class="table table-bordered table-hover js-basic-example dataTable">
-                <thead>
-                    <tr>
-                      <th width="5%" style="text-align:center;">#</th>
-                      <th  class="sortLink" width="15%"><?php echo $this->Paginator->sort('Vendor.name','Name'); ?></th>      
-                      <th  class="sortLink" width="15%">Vouchers</th>
-
-                       <th  class="sortLink" width="15%">Logo</th>
-
-                        <th  class="sortLink" width="15%">Background</th>
-
-                      <th class="sortLink" width="15%" style="text-align:center;"><?php echo $this->Paginator->sort('Vendor.status','Status'); ?></th>
-                      <th class="sortLink" width="15%" style="text-align:center;"><?php echo $this->Paginator->sort('Vendor.created','Created'); ?></th>                     
-                      <th style="text-align:center;" width="15%">Action</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <?php     
-                    if(isset($listingData) && !empty($listingData)){   
-                    $i = 1;       
-                      foreach ($listingData as $key => $value) {   
-                    ?>
-                    <tr>
-                      <td align="center"><?php echo $i++; ?></td>
-                      <td><?php echo $value['Vendor']['name'] ?> </td>
-                      <td><?php echo $value['Vendor']['count'] ?> </td>
-
-                      <td> <?php $imagepath = Configure::read('SiteSettings.Absolute.VendorLogo').$value['Vendor']['logo'];                               
-                           echo $this->Html->image($imagepath,array('width'=>'60px','height'=>'50px'));?>
-                       </td>
-
-                        <td> <?php $imagepath = Configure::read('SiteSettings.Absolute.VendorLogo').$value['Vendor']['background_logo'];                               
-                           echo $this->Html->image($imagepath,array('width'=>'60px','height'=>'50px'));?>
-                       </td>
-
-                      <td><?php echo $this->Form->select('Vendor.status',Configure::read('General.status'),array('default' => $value['Vendor']['status'],'class'=>'form-control show-tick change_status','label'=>false,'empty' => false,'id' => base64_encode( $value['Vendor']['id'] )));?></td> 
-
-                      <td align="center"><?php   echo date(dateFormat,strtotime($value['Vendor']['created'])); ?> </td>
-
-                      <td align="center">         
-                        <?php 
-                        echo $this->Html->link('<i class="material-icons">remove_red_eye</i>',array('controller'=>'vouchers','action'=>'index',base64_encode($value['Vendor']['id'])),array('class' => 'btn bg-grey waves-effect btn-xs','escape'=>false,'title'=>'View Vouchers')) ; 
-                        echo "&nbsp;&nbsp;";
-                        echo $this->Html->link('<i class="material-icons">mode_edit</i>',array('controller'=>'vouchers','action'=>'edit_vendor',base64_encode($value['Vendor']['id'])),array('class' => 'btn bg-cyan waves-effect btn-xs','escape'=>false,'title'=>'Edit Vendor')); 
-                        echo "&nbsp;&nbsp;";
-                        echo $this->Html->link('<i class="material-icons">delete</i>','javascript:void(0);',array('class' => 'btn bg-red waves-effect btn-xs delete_data','escape'=>false,'id'=>$value['Vendor']['id'],'title'=>'Delete')) ; 
-                        ?>
-                      </td> 
-                    </tr>
-                    <tr class="edit_u_account_details" style="display:none;">
-                      <td colspan="6"></td>
-                    </tr>
-                    <?php   }
-                     }else{ ?>
-                    <tr align="center">
-                      <td colspan="56">No data found.</td>
-                    </tr>
-                    <?php }
-                    ?>
-                </tbody>
+              <thead>
+                <tr>
+                  <th width="5%" style="text-align:center;">Sort</th>
+                  <th width="10%" style="text-align:center;">Delete   <input type="checkbox" id="selectall" title="Select All" /></th>
+                  <th  class="sortLink" width="15%"><?php echo $this->Paginator->sort('Vendor.name','Name'); ?></th>      
+                  <th  class="sortLink" width="8%">Vouchers</th>
+                  <th  class="sortLink" width="10%">Logo</th>
+                  <th  class="sortLink" width="10%">Background</th>
+                  <th class="sortLink" width="15%" style="text-align:center;"><?php echo $this->Paginator->sort('Vendor.status','Status'); ?></th>
+                  <th class="sortLink" width="15%" style="text-align:center;"><?php echo $this->Paginator->sort('Vendor.created','Created'); ?></th>                     
+                  <th style="text-align:center;" width="20%">Action</th>
+                </tr>
+              </thead>
             </table>
+            <div class="body order-list-body no-padding">
+              <div class="clearfix m-b-20">
+                <div class="dd nestable-with-handle">
+                  <ol class="dd-list">
+                    <?php     
+                      if(isset($listingData) && !empty($listingData)){   
+                      $i = 1;       
+                      foreach ($listingData as $key => $value) {   
+                      ?>
+                      <li class="dd-item dd3-item" data-id="<?php echo $value['Vendor']['id']; ?>">
+                        <div class="dd-handle dd3-handle">&nbsp;</div>
+                        <div class="dd3-content">
+                          <table border="0" cellspacing="0" cellpadding="0" align="center" width="100%" class="table" style="margin-bottom:0;">
+                            <tbody>
+                              <tr>
+                                <td align="center" width="5%">&nbsp;</td>
+                                <td align="center" width="10%"><input type="checkbox" name="selectedVendor[]" class="select_delete_data" value="<?php echo $value['Vendor']['id']; ?>" title="Select Vendors"></td>
+
+                                <td width="15%"><?php echo $value['Vendor']['name'] ?> </td>
+                                <td width="8%"><?php echo $value['Vendor']['count'] ?> </td>
+                                <td width="10%"> <?php $imagepath = Configure::read('SiteSettings.Absolute.VendorLogo').$value['Vendor']['logo'];                               
+                                    echo $this->Html->image($imagepath,array('width'=>'60px','height'=>'50px'));?>
+                                </td>
+                                <td width="10%"> <?php $imagepath = Configure::read('SiteSettings.Absolute.VendorLogo').$value['Vendor']['background_logo'];                               
+                                  echo $this->Html->image($imagepath,array('width'=>'60px','height'=>'50px'));?>
+                                </td>
+                                <td width="15%"><?php echo $this->Form->select('Vendor.status',Configure::read('General.status'),array('default' => $value['Vendor']['status'],'class'=>'form-control show-tick change_status','label'=>false,'empty' => false,'id' => base64_encode( $value['Vendor']['id'] )));?></td> 
+                                <td align="center" width="15%"><?php   echo date(dateFormat,strtotime($value['Vendor']['created'])); ?> </td>
+                                <td align="center" width="20%">         
+                                  <?php 
+                                    echo $this->Html->link('<i class="material-icons">remove_red_eye</i>',array('controller'=>'vouchers','action'=>'index',base64_encode($value['Vendor']['id'])),array('class' => 'btn bg-grey waves-effect btn-xs','escape'=>false,'title'=>'View Vouchers')) ; 
+                                    echo "&nbsp;&nbsp;";
+                                    echo $this->Html->link('<i class="material-icons">mode_edit</i>',array('controller'=>'vouchers','action'=>'edit_vendor',base64_encode($value['Vendor']['id'])),array('class' => 'btn bg-cyan waves-effect btn-xs','escape'=>false,'title'=>'Edit Vendor')); 
+                                    echo "&nbsp;&nbsp;";
+                                    echo $this->Html->link('<i class="material-icons">delete</i>','javascript:void(0);',array('class' => 'btn bg-red waves-effect btn-xs delete_data','escape'=>false,'id'=>$value['Vendor']['id'],'title'=>'Delete')) ; 
+                                  ?>
+                                </td> 
+                              </tr>
+                            </tbody>
+                          </table>
+                        </div>
+                      </li>                   
+                    <?php } }else { ?>
+                      <li align="center" colspan="10">
+                        No data found.
+                      </li>
+                    <?php } ?> 
+                  </ol>
+                </div>
+              </div>
+            </div>
             <?php echo $this->element('pagination_new'); ?>
         </div>
       </div>
@@ -208,9 +213,42 @@ $(document).ready(function(){
         }
       },className: "bootbox-m"
     });
+    
   });
 
 });
+
+$(function () {
+    $('.dd').nestable({
+      maxDepth:1,  
+    });     
+    $('.dd').on('change', function () { 
+      var url = adminUrl+'vouchers/change_order/'; 
+      var $this = $(this);
+      var serializedData = window.JSON.stringify($($this).nestable('serialize'));
+      $.ajax({
+        type: "POST",
+        url: url,
+        dataType: 'json',
+        data: {'data[Vendor]':{'serializedData':serializedData}},
+        error: function(a,b,c) {
+            return '';
+        },
+        success: function(response) {
+          if(response != ''){
+            var url = response;
+            //window.location=url;  
+          }
+        }
+      });
+    });
+  });
+
+
+
+
+
+
 </script>
 
 

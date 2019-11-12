@@ -18,7 +18,27 @@ getBySlug = (slug) => {
     })
 }
 
+
+getCities = (slug) => {
+    return new Promise(function (resolve, reject) {
+        // mySQl query      
+        const sqlQuery = "Select * from cities order by city_name ASC";
+        //Execute query
+        connections.ExecuteSelectQuery(sqlQuery)
+            .then(data => {
+                resolve(data);
+            }).catch(err => {
+                reject(err);
+            });
+    })
+}
+
+
+
+
+
 //export functions
 module.exports = {
-    getBySlug
+    getBySlug,
+    getCities
 }

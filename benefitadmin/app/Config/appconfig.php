@@ -3,7 +3,7 @@ define('siteSlug', 'BeneFit');
 define('projectTitle', 'BeneFit');
 define( 'dateFormat', 'M d, Y' );
 define( 'dateTimeFormat', 'M d, Y H:i A' );
-Configure::write('AdminListingLimit','10');
+Configure::write('AdminListingLimit','50');
 Configure::write('Email',array('Admin'=>'user1.guts@gmail.com'));
 
 Configure::write ( 'DateTimeFormat','M d, Y H:i A' );

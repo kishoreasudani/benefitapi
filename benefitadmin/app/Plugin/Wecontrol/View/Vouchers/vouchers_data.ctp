@@ -6,13 +6,13 @@
             <table class="table table-bordered table-hover js-basic-example dataTable">
                 <thead>
                     <tr>
-                      <th width="5%" style="text-align:center;">#</th>
+                       <th width="10%" style="text-align:center;">Delete   <input type="checkbox" id="selectall" title="Select All" /></th>
                       <th  class="sortLink" width="15%"><?php echo $this->Paginator->sort('Voucher.name','Name'); ?></th> 
                       <th  class="sortLink" width="15%"><?php echo $this->Paginator->sort('Voucher.code','Code'); ?></th> 
-                      <th  class="sortLink" width="15%">Redeemptions</th>
-                      <th class="sortLink" width="15%" style="text-align:center;"><?php echo $this->Paginator->sort('Voucher.status','Status'); ?></th>
-                      <th class="sortLink" width="15%" style="text-align:center;"><?php echo $this->Paginator->sort('Voucher.start_date','Start Date'); ?></th>
-                      <th class="sortLink" width="15%" style="text-align:center;"><?php echo $this->Paginator->sort('Voucher.end_date','End Date'); ?></th>                      
+                      <th  class="sortLink" width="10%">Redeemptions</th>
+                      <th class="sortLink" width="13%" style="text-align:center;"><?php echo $this->Paginator->sort('Voucher.status','Status'); ?></th>
+                      <th class="sortLink" width="12%" style="text-align:center;"><?php echo $this->Paginator->sort('Voucher.start_date','Start Date'); ?></th>
+                      <th class="sortLink" width="13%" style="text-align:center;"><?php echo $this->Paginator->sort('Voucher.end_date','End Date'); ?></th>                      
                       <th style="text-align:center;" width="15%">Action</th>
                     </tr>
                 </thead>
@@ -23,12 +23,18 @@
                       foreach ($listingData as $key => $value) {   
                     ?>
                     <tr>
-                      <td align="center"><?php echo $i++; ?></td>
+
+                     <td align="center" width="5%"><input type="checkbox" name="selectednoti[]" class="select_delete_data" value="<?php echo $value['Voucher']['id']; ?>" title="Select Notification"></td>
+
                       <td><?php echo $value['Voucher']['name'] ?> </td>
                       <td><?php echo ucwords($value['Voucher']['code']); ?> </td>
                       <td><?php echo $value['Voucher']['count'] ?> </td>
                       <td><?php echo $this->Form->select('Voucher.status',Configure::read('General.status'),array('default' => $value['Voucher']['status'],'class'=>'form-control show-tick change_status','label'=>false,'empty' => false,'id' => base64_encode( $value['Voucher']['id'] )));?></td> 
-                      <td align="center"><?php   echo date(dateFormat,strtotime($value['Voucher']['start_date'])); ?> </td>
+                      <td align="center"><?php   echo date(dateFormat,strtotime($value['Voucher']['start_date']));  if( time() < strtotime($value['Voucher']['start_date'])){   ?>
+                       <span style="color: red"> <br>Not Started</span>
+                        <?php } ?>
+
+                       </td>
                       <td align="center"><?php   echo date(dateFormat,strtotime($value['Voucher']['end_date']));  if( time() > strtotime($value['Voucher']['end_date'])){  ?>
                        <span style="color: red"> Expired</span>
                         <?php } ?>

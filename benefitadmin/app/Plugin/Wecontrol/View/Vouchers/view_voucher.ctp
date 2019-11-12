@@ -113,21 +113,9 @@
                 </div>
               </div>
               <div class="row margin-bottom15">
+              
                 <div class="col-sm-6">
-                  <div class="row">
-                    <label class="col-sm-4 text-right">T&C :</label>
-                    <div class="col-sm-8">
-                      <?php echo  $pages['Voucher']['terms_and_conditions'];?>
-                    </div>
-                  </div>
-                </div>
-                <div class="col-sm-6">
-                  <div class="row">
-                    <label class="col-sm-4 text-right">Descriptions :</label>
-                    <div class="col-sm-8">
-                      <?php echo  $pages['Voucher']['descriptions'];?>
-                    </div>
-                  </div>
+               
                 </div>
               </div>
               <div class="row margin-bottom15">

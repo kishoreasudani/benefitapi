@@ -7,6 +7,8 @@ const dates = require('../../utils/date');
 //Get Coin History
 getList = (postParams) => {
     return new Promise(function (resolve, reject) {
+
+
         let totalcoin = "select total_coins,total_used from coins WHERE user_id=" + postParams.user_id;
          connections.ExecuteSelectQuery(totalcoin)
             .then(totalcoinData => {

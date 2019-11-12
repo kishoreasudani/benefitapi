@@ -1,7 +1,7 @@
 <?php
 class UsersController extends WecontrolAppController {
 	public $name = 'Users';
-	public $uses = array('Wecontrol.User','Wecontrol.City','Wecontrol.State','UserAddress','Wecontrol.Coin','Wecontrol.Running','Wecontrol.RunningHistory');
+	public $uses = array('Wecontrol.User','Wecontrol.City','Wecontrol.State','UserAddress','Wecontrol.Coin','Wecontrol.Running','Wecontrol.RunningHistory','Wecontrol.CoinHistory');
 	public $components = array(
 		'Auth' => array(
 			'authenticate' => array(
@@ -140,13 +140,55 @@ class UsersController extends WecontrolAppController {
 				$this->Session->setFlash('User has been updated successfully.', 'default', null, 'success');
 				if($this->User->save($this->request->data)) {
 					$data = $this->Coin->findByUserId($this->request->data['User']['id']);
+
+					$coinHistory = 0;
+
 					if(isset($data) && !empty($data)){
-						$this->Coin->updateAll(array('Coin.total_coins'=>"'".$this->request->data['Coin']['total_coins']."'"),array('Coin.user_id'=>$this->request->data['User']['id']));
-					}
-					else{
+                 
+                        $usedCoin = $data['Coin']['total_used'];
+
+						if($this->request->data['Coin']['total_coins']!=''){
+							$coinHistory = $this->request->data['Coin']['total_coins']-$data['Coin']['total_coins'];
+
+							if($coinHistory<0){
+								 $coinHistorypositive = abs($coinHistory);
+								 $usedCoin = $usedCoin+abs($coinHistorypositive);
+							}
+						}
+						
+						$this->Coin->updateAll(array(
+							  'Coin.total_coins'=>"'".$this->request->data['Coin']['total_coins']."'",
+							  'Coin.total_used'=>"'".$usedCoin."'",
+							  ),array('Coin.user_id'=>$this->request->data['User']['id']));
+					}else{
 						$this->request->data['Coin']['user_id'] = $this->request->data['User']['id'];
 						$this->Coin->save($this->request->data['Coin']);
 					}
+
+
+					if($coinHistory!=0){
+						 $type = "";
+                         if($coinHistory>0){
+                             $type = "earn";
+                         }
+
+                         if($coinHistory<0){
+                             $coinHistory = abs($coinHistory);
+                             $type = "used";
+                         }
+
+                         if($type!=""){
+							 $coinHistoryData['CoinHistory']['user_id'] = $this->request->data['User']['id'];
+							 $coinHistoryData['CoinHistory']['coins'] = $coinHistory;
+							 $coinHistoryData['CoinHistory']['type'] = $type;
+							 $coinHistoryData['CoinHistory']['reference_type'] = 'admin';
+							 $this->CoinHistory->create();
+							 $this->CoinHistory->save($coinHistoryData);
+						 }
+
+					}
+
+
 	            	$last_insert_id    	= $id;
 		           	$dowloadPath   	= Configure::read('SiteSettings.Relative.UserImage').$id;
  

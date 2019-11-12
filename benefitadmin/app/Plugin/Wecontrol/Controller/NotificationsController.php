@@ -8,7 +8,7 @@ class NotificationsController extends WecontrolAppController {
 
 	function beforeFilter(){
 		parent::beforeFilter();
-		$this->Auth->allow('index', 'notification_data', 'send_notifications', 'delete_notification', 'user_notifications', 'user_notifications_data', 'add_notification', 'delete_user_notification');			
+		$this->Auth->allow('index', 'notification_data', 'send_notifications', 'delete_notification', 'user_notifications', 'user_notifications_data', 'add_notification', 'delete_user_notification','delete_multiple_notification');			
 	}
 
 	public function index() {
@@ -75,7 +75,7 @@ class NotificationsController extends WecontrolAppController {
 	public function send_notifications() {
 		$this->_is_user_login (); 
 		$this->loadModel('Wecontrol.User');
-		$user_list = $this->User->find('list', array('conditions'=>array('status'=>'Active','push_notifications'=>'yes'),'fields'=>array('id','first_name')));
+		$user_list = $this->User->find('list', array('conditions'=>array('status'=>'Active'),'fields'=>array('id','first_name')));
 		$this->set('user_list',$user_list);
 		$success = true;
 		$message = array();
@@ -86,20 +86,17 @@ class NotificationsController extends WecontrolAppController {
 			if($this->UserNotification->validates()) {
 				$this->request->data['UserNotification']['sender_id'] = $this->_modified_by ();
 				$this->request->data['UserNotification']['created'] = date('Y-m-d H:i:s');
-				$this->loadModel('UserDevice');
 				foreach($this->UserNotification->data['UserNotification']['receiver_id'] as $key => $value)
 				{	
 					
 					$this->request->data['UserNotification']['receiver_id'] = $value;
 					$this->UserNotification->create();
 					$this->UserNotification->save($this->request->data,false);
-					$title = 'Benefit';
 					$fcm_user_id=$this->request->data['UserNotification']['receiver_id'];
 					$device_token = $this->UserDevice->find('first', array('conditions'=>array('user_id'=>$fcm_user_id),'fields'=>array('device_token'), 'order' => 'CREATED desc'));
 					// prd($device_token);
 					$this->__send_notification_functio($device_token['UserDevice'],$title,$this->request->data['UserNotification']['message']);
-				}  
-						
+				}  						
 				$success = true;
 				$message = "Push Notification has been send successfully.";
 				$this->Session->setFlash('Push Notification has been send successfully.', 'default', null, 'success');
@@ -133,6 +130,28 @@ class NotificationsController extends WecontrolAppController {
 		echo json_encode($response);
 		die;	
 	}
+
+
+
+	public function delete_multiple_notification(){
+		$this->layout = false;
+		if($this->request->is('ajax')) {	
+		       $deleteData = 	$this->request->data['deleteData'];
+				$response = array();
+				if(!empty($deleteData)) {
+					foreach ($deleteData as $key => $value) {
+						$this->UserNotification->deleteAll(array('UserNotification.id' => $value), false);
+					}
+					$response = array('success' => true,'msg' => 'Notifications has been deleted successfully.');
+				} else {
+					$response = array('success' => false,'msg' => 'Oops error please try again.');
+				}
+			echo json_encode($response);
+            die;
+		} else {
+			$this->redirect('/');
+		}
+    }
 	
 	public function add_notification() {
 

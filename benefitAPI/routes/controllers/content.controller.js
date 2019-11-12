@@ -15,7 +15,25 @@ getBySlug = async (req, reply) => {
     })
 }
 
+
+
+getCities = async (req, reply) => {
+    pageService.getCities().then(response => {
+        if (response != null && response.length > 0) {
+            utils.sendSuccessResponse(response.length, response, reply);
+        }
+        else {
+            utils.sendErrorResponse(message.faq_validation.statusCode, message.faq_validation.not_found, reply)
+        }
+    }).catch(err => {
+        utils.sendAndWriteErrorResponse(err, reply);
+    })
+}
+
+
+
 //export functions
 module.exports = {
-    getBySlug
+    getBySlug,
+    getCities
 }

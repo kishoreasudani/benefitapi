@@ -26,11 +26,11 @@ getList = (postParams) => {
         let condition = ""
         if (postParams.search_text != "" && postParams.search_text != null) {
             condition = " AND (A.name LIKE '%" + postParams.search_text + "%'  OR A.description LIKE '%" + postParams.search_text + "%'  OR B.name LIKE '%" + postParams.search_text + "%'  OR B.code LIKE '%" + postParams.search_text
-                + "%' OR B.description LIKE '%" + postParams.search_text + "%' ) ";
+                + "%' OR A.terms_and_conditions LIKE '%" + postParams.search_text + "%' ) ";
         }
 
 
-        let sqlQuery = "SELECT A.id AS vendorID, A.vendor_url , A.logo AS image , A.background_logo AS bg_image,A.name AS vendorName, B.id, MAX(B.id) AS maxid ,B.name, B.code,B.coins_required,B.discount_type,B.amount,B.max_discount,B.min_purchase,B.start_date,B.end_date,B.descriptions,B.terms_and_conditions,B.created,B.modified FROM vendors AS A JOIN vouchers AS B ON A.id=B.vendor_id  WHERE B.status='" + enums.enmVoucherStatus.active + "' AND A.status='" + enums.enmVoucherStatus.active + "'  AND B.end_date>=UTC_DATE()  AND B.id NOT IN (SELECT reference_id FROM user_orders WHERE reference_type='voucher') GROUP BY B.vendor_id ORDER BY maxid DESC";
+        let sqlQuery = "SELECT A.display_order, A.id AS vendorID, A.vendor_url , A.logo AS image , A.background_logo AS bg_image,A.name AS vendorName, B.id, MAX(B.id) AS maxid ,B.name, B.code,B.coins_required,B.discount_type,B.amount,B.max_discount,B.min_purchase,B.start_date,B.end_date,A.description AS descriptions ,A.terms_and_conditions,B.created,B.modified FROM vendors AS A JOIN vouchers AS B ON A.id=B.vendor_id  WHERE B.status='" + enums.enmVoucherStatus.active + "' AND A.status='" + enums.enmVoucherStatus.active + "'  AND B.end_date>=UTC_DATE()  AND B.id NOT IN (SELECT reference_id FROM user_orders WHERE reference_type='voucher') GROUP BY B.vendor_id ORDER BY A.display_order ASC";
 
         sqlQuery = sqlQuery + condition + pagingCondition;
          // console.log(sqlQuery)
@@ -91,7 +91,7 @@ getList = (postParams) => {
 getById = (id) => {
     return new Promise(function (resolve, reject) {
         // mySQl query      
-        const sqlQuery = "SELECT A.id AS vendorID, A.vendor_url , A.logo AS image , A.background_logo AS bg_image,A.name AS vendorName, B.id ,B.name, B.code,B.coins_required,B.discount_type,B.amount,B.max_discount,B.min_purchase,B.start_date,B.end_date,B.descriptions,B.terms_and_conditions,B.created,B.modified FROM vendors AS A JOIN vouchers AS B ON A.id=B.vendor_id  WHERE B.id = " + id;
+        const sqlQuery = "SELECT A.id AS vendorID, A.vendor_url , A.logo AS image , A.background_logo AS bg_image,A.name AS vendorName, B.id ,B.name, B.code,B.coins_required,B.discount_type,B.amount,B.max_discount,B.min_purchase,B.start_date,B.end_date,A.description AS descriptions,A.terms_and_conditions,B.created,B.modified FROM vendors AS A JOIN vouchers AS B ON A.id=B.vendor_id  WHERE B.id = " + id;
 
         //Execute query
         connections.ExecuteSelectQuery(sqlQuery)
