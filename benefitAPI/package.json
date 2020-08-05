@@ -11,7 +11,7 @@
     "crypto": "^1.0.1",
     "csv-writer": "^1.4.0",
     "debug": "~2.6.9",
-    "fastify": "^2.4.0",
+    "fastify": "^2.15.1",
     "fastify-helmet": "^3.0.0",
     "fastify-sequelize": "^1.0.4",
     "fastify-static": "^2.5.0",
